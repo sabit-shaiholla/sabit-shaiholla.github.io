@@ -80,9 +80,10 @@ params:
   assets:
     disableHLJS: true
     # disableFingerprinting: true
-    # favicon: "/favicon.ico"
-    # favicon16x16: "/favicon-16x16.png"
-    # favicon32x32: "/favicon-32x32.png"
+    favicon: "static/images/favicon/favicon.ico"
+    favicon16x16: "static/images/favicon/favicon-16x16.png"
+    favicon32x32: "static/images/favicon/favicon-32x32.png"
+    appleTouchIcon: "static/images/favicon/apple-touch-icon.png"
 
   profileMode:
     enabled: true
