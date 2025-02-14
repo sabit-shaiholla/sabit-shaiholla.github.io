@@ -1,0 +1,21 @@
+/* Add your custom styles here */
+.post-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+} 
+
+.twitter-tweet {
+    margin: auto;
+}
+
+iframe {
+    border-radius: var(--radius) !important;
+}
+
+.home-info ul {
+    padding-inline-start: 20px;
+}
+
+.entry-cover img {
+    border: 1px solid var(--border);
+}

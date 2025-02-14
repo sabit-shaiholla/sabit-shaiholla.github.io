@@ -1,0 +1,137 @@
+baseURL: "https://sabit-shaiholla.github.io/"
+title: "Sabit Shaikholla"
+pagination.pagerSize: 5
+theme: [PaperMod]
+
+pygmentsUseClasses: true
+enableInlineShortcodes: true
+enableRobotsTXT: true
+buildDrafts: false
+buildFuture: false
+buildExpired: false
+enableEmoji: true
+
+defaultContentLanguage: en
+languageCode: en-us
+
+languages:
+  en:
+    languageName: "English"
+    weight: 1
+    taxonomies:
+      category: categories
+      tag: tags
+      series: series
+    menu:
+      main:
+        - identifier: home
+          name: Home
+          url: /
+          weight: 10
+        - identifier: til
+          name: TIL
+          url: /til/
+          weight: 20
+        - identifier: portfolio
+          name: Portfolio
+          url: /portfolio/
+          weight: 30
+        - identifier: random
+          name: Random
+          url: /random/
+          weight: 40
+        - identifier: search
+          name: Search
+          url: /search/
+          weight: 50
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
+
+params:
+  env: production # to enable google analytics, opengraph, twitter-cards and schema.
+  title: Sabit Shaikholla
+  description: "Personal website and blog"
+  author: Sabit Shaikholla
+  defaultTheme: dark
+  disableThemeToggle: false
+
+  homeInfoParams:
+    Title: "Hi there 👋"
+    Content: >
+      Welcome to my personal website!
+
+  ShowReadingTime: true
+  ShowShareButtons: true
+  ShowPostNavLinks: true
+  ShowBreadCrumbs: true
+  ShowCodeCopyButtons: true
+  ShowWordCount: true
+  ShowRssButtonInSectionTermList: true
+  
+  comments: false
+  hidemeta: false
+  hideSummary: false
+  showtoc: true
+
+  assets:
+    disableHLJS: true
+    # disableFingerprinting: true
+    # favicon: "/favicon.ico"
+    # favicon16x16: "/favicon-16x16.png"
+    # favicon32x32: "/favicon-32x32.png"
+
+  profileMode:
+    enabled: true
+    title: Sabit Shaikholla
+    subtitle: >
+      Welcome to my personal website!
+      <br><br>
+      **Solution Architect** | **Tech Enthusiast** | **Analyst**  
+      <br><br>
+      Solutions- and Data-driven Systems Analyst with 4+ years of experience architecting and implementing enterprise-scale applications. 
+      Demonstrated expertise in Full-Stack Development, Software Architecture, and Cloud Solutions. 
+      Proven track record of improving system performance, reducing operational costs, and driving digital transformation initiatives.
+      <br><br>
+      I'm also a tech and football enthusiast.
+
+    imageUrl: "/images/profile.jpg"
+    imageWidth: 120
+    imageHeight: 120
+    imageTitle: Profile Picture
+    buttons:
+      - name: TIL
+        url: /til/
+      - name: Portfolio
+        url: /portfolio/
+      - name: Random
+        url: /random/
+
+  socialIcons:
+    - name: github
+      url: "https://github.com/sabit-shaiholla"
+    - name: linkedin
+      url: "https://linkedin.com/in/sabit-shaiholla"
+
+  # fuseOpts:
+  #   isCaseSensitive: false
+  #   shouldSort: true
+  #   location: 0
+  #   distance: 1000
+  #   threshold: 0.4
+  #   minMatchCharLength: 0
+  #   keys: ["title", "permalink", "summary", "content", "tags"]
+
+
+markup:
+  highlight:
+    noClasses: false
+    # lineNos: true
+    style: monokai
+  goldmark:
+    renderer:
+      unsafe: true
+  
