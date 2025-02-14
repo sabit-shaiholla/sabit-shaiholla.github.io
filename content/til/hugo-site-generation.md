@@ -7,7 +7,7 @@ tags: ["hugo", "web", "github-pages","static-site"]
 categories: ["Web Development"]
 series: ["Hugo Learning"]
 showtoc: true
-tocopen: true
+tocopen: false
 ---
 
 ## Introduction
