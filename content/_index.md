@@ -10,6 +10,7 @@ I'm Sabit Shaikholla, a Solution Architect passionate about technology and innov
 ### What I Do
 
 - Solution Architecture & Design
+- AI & Machine Learning
 - Full-Stack Development
 - Cloud Solutions
 - Technical Leadership
