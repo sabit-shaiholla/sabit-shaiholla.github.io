@@ -1,0 +1,59 @@
+{{- /* Debug all pages */ -}}
+{{- range .Site.RegularPages -}}
+  {{- printf "<!-- Regular page: %s, Section: %s -->" .RelPermalink .Section | safeHTML -}}
+{{- end -}}
+
+{{- /* Get all pages from specific sections */ -}}
+{{- $allPages := where .Site.RegularPages "Section" "in" (slice "til" "portfolio" "random") -}}
+
+{{- /* Debug filtered pages */ -}}
+{{- range $allPages -}}
+  {{- printf "<!-- Including page: %s from section: %s -->" .RelPermalink .Section | safeHTML -}}
+{{- end -}}
+
+{{- /* Build nodes */ -}}
+{{- $nodes := slice -}}
+{{- range $allPages -}}
+  {{- $nodes = $nodes | append (dict 
+    "id" .RelPermalink
+    "name" .Title
+    "section" .Section
+    "tags" (.Params.tags | default slice)
+    "categories" (.Params.categories | default slice)
+  ) -}}
+{{- end -}}
+
+{{- /* Build links */ -}}
+{{- $links := slice -}}
+{{- range $page := $allPages -}}
+  {{- range $otherPage := $allPages -}}
+    {{- if ne $page.RelPermalink $otherPage.RelPermalink -}}
+      {{- $commonTags := 0 -}}
+      {{- range $tag := $page.Params.tags | default slice -}}
+        {{- if in ($otherPage.Params.tags | default slice) $tag -}}
+          {{- $commonTags = add $commonTags 1 -}}
+        {{- end -}}
+      {{- end -}}
+
+      {{- $commonCategories := 0 -}}
+     {{- range $category := $page.Params.categories | default slice -}}
+        {{- if in ($otherPage.Params.categories | default slice) $category -}}
+          {{- $commonCategories = add $commonCategories 1 -}}
+        {{- end -}}
+      {{- end -}}
+
+      {{- if or (gt $commonTags 0) (gt $commonCategories 0) -}}
+        {{- $links = $links | append (dict 
+          "source" $page.RelPermalink
+          "target" $otherPage.RelPermalink
+          "value" (add $commonTags $commonCategories)
+        ) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{
+  "nodes": {{ $nodes | jsonify }},
+  "links": {{ $links | jsonify }}
+}

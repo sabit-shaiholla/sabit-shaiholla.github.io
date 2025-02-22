@@ -1,0 +1,40 @@
+:root {
+  --primary: #1f6feb;
+  --secondary: #8b949e;
+}
+
+[theme="dark"] {
+  --primary: #58a6ff;
+  --secondary: #8b949e;
+}
+
+#graph-container {
+  background: var(--theme);
+  cursor: pointer;
+}
+
+#graph-container canvas {
+  border-radius: 8px;
+}
+
+.node {
+  cursor: pointer;
+}
+
+.node:hover {
+  stroke: var(--primary);
+  stroke-width: 2px;
+}
+
+.link {
+  stroke-opacity: 0.6;
+}
+
+.graph-tooltip {
+  color: var(--content);
+  background: var(--theme);
+  padding: 5px;
+  border-radius: 4px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+} 

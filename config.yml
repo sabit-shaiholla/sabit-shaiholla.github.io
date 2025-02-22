@@ -44,12 +44,28 @@ languages:
           name: Search
           url: /search/
           weight: 50
+        - identifier: graph
+          name: Graph
+          url: /graph/
+          weight: 45
 
 outputs:
   home:
     - HTML
     - RSS
     - JSON
+  section:
+    - HTML
+    - JSON
+  page:
+    - HTML
+
+outputFormats:
+  JSON:
+    mediaType: "application/json"
+    isPlainText: true
+    isHTML: false
+    permalinkable: true
 
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
