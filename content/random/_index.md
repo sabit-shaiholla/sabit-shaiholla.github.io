@@ -1,4 +1,6 @@
 ---
-title: "Random Thoughts and Ideas"
-description: "Various thoughts and ideas"
+title: "Random"
+layout: "list"
+outputs: ["html", "json"]
 --- 
+Ideas, experiments, and other random stuff.
