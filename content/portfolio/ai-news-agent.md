@@ -11,7 +11,7 @@ showToc: true
 
 The AI News Research Agent is an intelligent system that automates news research and synthesis using modern AI technologies. It combines Google's Gemini 2.0 Flash model with Tavily's search capabilities in a type-safe framework powered by Pydantic-AI.
 
-![Example image of the AI News Research Agent UI](/static/portfolio/ai-news-agent.jpeg)
+![Example image of the AI News Research Agent UI](/portfolio/ai-news-agent.jpeg)
 
 ## System Architecture
 
