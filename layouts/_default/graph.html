@@ -21,282 +21,270 @@
 <script src="https://unpkg.com/force-graph"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // Constants for layout and styling - optimized for performance
-  const NODE_SIZE = 4;
-  const PADDING = 15; // Reduced padding for tighter layout
-  const PARTICLE_COUNT = 1; // Reduced particle count for better performance
-  const PARTICLE_SPEED = 0.003; // Slightly increased for better visibility
-  
-  // DOM elements
   const container = document.getElementById('graph-container');
   const fullscreenBtn = document.getElementById('fullscreen-btn');
+  const NODE_SIZE = 4;
+  const PADDING = 10;
   
-  // Optimized helper functions
+  const NODE_COLORS = {
+    til: '#58a6ff',
+    portfolio: '#7ee787',
+    random: '#ff7b72',
+    default: '#1f6feb',
+    highlight: '#ff6b6b'
+  };
+  
   const getBoundingBox = nodes => {
     if (!nodes.length) return { minX: 0, maxX: 0, minY: 0, maxY: 0 };
     
-    // Using a single pass to find bounds (more efficient)
-    return nodes.reduce((box, node) => ({
-      minX: Math.min(box.minX, node.x || 0),
-      maxX: Math.max(box.maxX, node.x || 0),
-      minY: Math.min(box.minY, node.y || 0),
-      maxY: Math.max(box.maxY, node.y || 0)
-    }), { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity });
+    return nodes.reduce((box, node) => {
+      const x = node.x || 0;
+      const y = node.y || 0;
+      box.minX = x < box.minX ? x : box.minX;
+      box.maxX = x > box.maxX ? x : box.maxX;
+      box.minY = y < box.minY ? y : box.minY;
+      box.maxY = y > box.maxY ? y : box.maxY;
+      return box;
+    }, { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity });
   };
 
-  // Optimized node fitting algorithm
-  const fitAllNodes = (graph, duration = 300) => {
+  const calculateGridPositions = (nodes, width, height) => {
+    const count = nodes.length;
+    const gridSize = Math.ceil(Math.sqrt(count));
+    const xStep = width / (gridSize + 1);
+    const yStep = height / (gridSize + 1);
+    
+    for (let i = 0; i < count; i++) {
+      const row = Math.floor(i / gridSize);
+      const col = i % gridSize;
+      nodes[i].x = (col + 0.5) * xStep + (Math.random() * 10 - 5); // Add small jitter for natural look
+      nodes[i].y = (row + 0.5) * yStep + (Math.random() * 10 - 5);
+      nodes[i]._color = NODE_COLORS[nodes[i].section] || NODE_COLORS.default;
+    }
+  };
+
+  const fitNodes = (graph, duration = 250) => {
     const { nodes } = graph.graphData();
     if (!nodes.length) return;
     
     const width = container.clientWidth;
     const height = container.clientHeight;
-    const bounds = getBoundingBox(nodes);
+    const box = getBoundingBox(nodes);
     
-    // Add padding to node size for better fit
-    const nodeSize = NODE_SIZE * 2;
-    const graphWidth = bounds.maxX - bounds.minX + nodeSize;
-    const graphHeight = bounds.maxY - bounds.minY + nodeSize;
+    const graphWidth = box.maxX - box.minX + NODE_SIZE * 2;
+    const graphHeight = box.maxY - box.minY + NODE_SIZE * 2;
     
-    // Calculate optimal scale factor for fitting
     const scale = Math.min(
       (width - PADDING * 2) / graphWidth,
       (height - PADDING * 2) / graphHeight
-    ) * 0.95; // Small reduction to ensure nodes don't touch container edges
+    ) * 0.95;
     
-    // Calculate center position (average of all node positions)
-    const centerX = (bounds.minX + bounds.maxX) / 2;
-    const centerY = (bounds.minY + bounds.maxY) / 2;
+    const centerX = (box.minX + box.maxX) / 2;
+    const centerY = (box.minY + box.maxY) / 2;
     
-    // Apply zoom and center with animation
-    graph.centerAt(centerX, centerY, duration);
-    graph.zoom(scale, duration);
+    requestAnimationFrame(() => {
+      graph.centerAt(centerX, centerY, duration);
+      graph.zoom(scale, duration);
+    });
   };
 
-  // Optimized node color assignment using a lookup for better performance
-  const getNodeColor = section => {
-    const colorMap = {
-      'til': '#58a6ff',      // Blue
-      'portfolio': '#7ee787', // Green
-      'random': '#ff7b72',   // Red
-      'default': '#1f6feb'   // Default blue
-    };
-    return colorMap[section] || colorMap.default;
-  };
-  
-  // Optimized graph initialization
-  const initializeGraph = data => {
-    const width = container.clientWidth;
-    const height = container.clientHeight;
+  const initializeGraph = () => {
+    let graph = null;
+    let hoveredNode = null;
+    let isFullscreen = false;
     
-    // Pre-process nodes for optimal initial positioning
-    // Using a grid-based layout for initial positions to reduce force simulation time
-    const nodeCount = data.nodes.length;
-    const gridSize = Math.ceil(Math.sqrt(nodeCount));
-    const cellWidth = width / (gridSize + 1);
-    const cellHeight = height / (gridSize + 1);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
     
-    data.nodes.forEach((node, i) => {
-      // Position nodes in a grid pattern for better initial layout
-      const row = Math.floor(i / gridSize);
-      const col = i % gridSize;
-      node.x = (col + 1) * cellWidth;
-      node.y = (row + 1) * cellHeight;
-      // Pre-calculate node color for better performance
-      node._color = getNodeColor(node.section);
-    });
-    
-    // Create and configure graph with optimized parameters
-    const graph = ForceGraph()(container)
-      .graphData(data)
-      .nodeId('id')
-      .nodeLabel(node => {
-        // Optimize label creation by avoiding unnecessary string operations
-        const parts = [];
-        if (node.name) parts.push(node.name);
-        if (node.tags?.length) parts.push(`Tags: ${node.tags.join(', ')}`);
-        if (node.categories?.length) parts.push(`Categories: ${node.categories.join(', ')}`);
-        return parts.join('\n');
+    fetch('{{ "graph/index.json" | relURL }}', { signal: controller.signal })
+      .then(res => {
+        clearTimeout(timeoutId);
+        if (!res.ok) throw new Error(`Network error: ${res.status}`);
+        return res.json();
       })
-      .nodeVal(NODE_SIZE)
-      .nodeColor(node => node._color) // Use pre-calculated color
-      .linkColor(() => '#8b949e')
-      .nodeRelSize(4)
-      .linkWidth(link => Math.sqrt(link.value) * 0.4)
-      .linkDirectionalParticles(PARTICLE_COUNT)
-      .linkDirectionalParticleSpeed(PARTICLE_SPEED)
-      .maxZoom(20)
-      .minZoom(0.01)
-      .enableNodeDrag(true)
-      .enableZoomInteraction(true);
-    
-    // Optimize force simulation parameters for faster stabilization
-    graph
-      .d3Force('link', d3.forceLink()
-        .id(d => d.id)
-        .distance(80) // Reduced for tighter layout
-        .strength(1.2) // Increased for faster stabilization
-      )
-      .d3Force('charge', d3.forceManyBody()
-        .strength(-25) // Adjusted for better layout
-        .distanceMax(200) // Limit the range of repulsion
-        .theta(0.9) // Barnes-Hut approximation parameter (performance)
-      )
-      .d3Force('center', d3.forceCenter(width / 2, height / 2))
-      .d3Force('collision', d3.forceCollide(NODE_SIZE * 1.5))
-      .d3AlphaDecay(0.03) // Slightly faster decay for quicker stabilization
-      .d3VelocityDecay(0.3) // Higher friction for faster stabilization
-      .cooldownTime(2000) // Maximum simulation time in ms
-      .warmupTicks(100); // Reduced for faster initial rendering
-    
-    // Optimize node hover effect
-    const originalColors = {};
-    graph.onNodeHover(node => {
-      if (!node) {
-        // Restore all nodes to original colors when not hovering
-        Object.keys(originalColors).forEach(id => {
-          const node = graph.graphData().nodes.find(n => n.id === id);
-          if (node) node._color = originalColors[id];
-        });
-        Object.keys(originalColors).length = 0;
-      } else {
-        // Save original colors and highlight the hovered node
-        graph.graphData().nodes.forEach(n => {
-          if (n === node) {
-            originalColors[n.id] = n._color;
-            n._color = '#ff6b6b'; // Highlight color
-          }
-        });
-      }
-    });
-    
-    // Optimize node click handling
-    graph.onNodeClick(node => {
-      if (node && node.id) window.location.href = node.id;
-    });
-    
-    return graph;
-  };
-  
-  // Use fetch with a timeout to prevent hanging requests
-  const fetchWithTimeout = (url, options = {}, timeout = 5000) => {
-    return Promise.race([
-      fetch(url, options),
-      new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Request timed out')), timeout)
-      )
-    ]);
-  };
-  
-  // Main initialization with error handling
-  let graphInstance = null;
-  fetchWithTimeout('{{ "graph/index.json" | relURL }}')
-    .then(res => res.json())
-    .then(data => {
-      console.log('Fetched graph data:', {
-        nodes: data.nodes.length,
-        links: data.links.length
-      });
-      
-      if (!data.nodes.length) {
-        console.warn('No nodes in data');
-        container.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100%;color:var(--secondary);">No graph data available</div>';
-        return;
-      }
-      
-      // Initialize graph
-      graphInstance = initializeGraph(data);
-      
-      // Fit nodes after initialization and stabilization
-      requestAnimationFrame(() => fitAllNodes(graphInstance, 0));
-      graphInstance.onEngineStop(() => fitAllNodes(graphInstance, 300));
-      
-      // Optimize fullscreen toggle
-      fullscreenBtn.addEventListener('click', () => {
-        const isFullscreen = container.style.position === 'fixed';
-        
-        // Toggle fullscreen state
-        if (!isFullscreen) {
-          // Enter fullscreen
-          container.style.transition = 'all 300ms ease-in-out';
-          container.style.position = 'fixed';
-          container.style.top = '5%';
-          container.style.left = '5%';
-          container.style.width = '90%';
-          container.style.height = '90%';
-          container.style.zIndex = '999';
-          
-          // Create overlay
-          const overlay = document.createElement('div');
-          overlay.id = 'graph-overlay';
-          overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0);transition:background-color 300ms ease-in-out;z-index:998;';
-          document.body.appendChild(overlay);
-          
-          // Force reflow to ensure transition works
-          overlay.offsetHeight;
-          overlay.style.backgroundColor = 'rgba(0,0,0,0.7)';
-          
-          // Update button
-          fullscreenBtn.style.position = 'fixed';
-          fullscreenBtn.style.top = '6%';
-          fullscreenBtn.style.right = '6%';
-          fullscreenBtn.style.zIndex = '1000';
-          fullscreenBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 15 6 6m-6-6v4.8m0-4.8h4.8M9 19.8V15m0 0H4.2M9 15l-6 6M15 4.2V9m0 0h4.8M15 9l6-6M9 4.2V9m0 0H4.2M9 9 3 3"/></svg>`;
-        } else {
-          // Exit fullscreen
-          container.style.position = 'relative';
-          container.style.top = '';
-          container.style.left = '';
-          container.style.width = '100%';
-          container.style.height = '500px';
-          container.style.zIndex = '';
-          
-          // Remove overlay with transition
-          const overlay = document.getElementById('graph-overlay');
-          if (overlay) {
-            overlay.style.backgroundColor = 'rgba(0,0,0,0)';
-            setTimeout(() => overlay.remove(), 300);
-          }
-          
-          // Reset button
-          fullscreenBtn.style.position = 'absolute';
-          fullscreenBtn.style.top = '10px';
-          fullscreenBtn.style.right = '10px';
-          fullscreenBtn.style.zIndex = '2';
-          fullscreenBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>`;
+      .then(data => {
+        if (!data.nodes?.length) {
+          container.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100%;">No graph data available</div>';
+          return;
         }
         
-        // Update graph dimensions with debounce for performance
-        setTimeout(() => {
-          if (graphInstance) {
-            graphInstance.width(container.clientWidth);
-            graphInstance.height(container.clientHeight);
-            graphInstance.d3Force('center', d3.forceCenter(container.clientWidth / 2, container.clientHeight / 2));
-            fitAllNodes(graphInstance, 300);
-          }
-        }, 310);
-      });
-      
-      // Optimize resize handler with debouncing
-      let resizeTimeout;
-      const handleResize = () => {
-        if (!graphInstance) return;
+        const width = container.clientWidth;
+        const height = container.clientHeight;
         
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-          graphInstance.width(container.clientWidth);
-          graphInstance.height(container.clientHeight);
-          graphInstance.d3Force('center', d3.forceCenter(container.clientWidth / 2, container.clientHeight / 2));
-          fitAllNodes(graphInstance, 300);
-        }, 100);
-      };
-      
-      window.addEventListener('resize', handleResize);
-    })
-    .catch(error => {
-      console.error('Error loading graph data:', error);
-      container.innerHTML = `<div style="display:flex;justify-content:center;align-items:center;height:100%;color:var(--secondary);">Error loading graph: ${error.message}</div>`;
-    });
+        calculateGridPositions(data.nodes, width, height);
+        
+        graph = ForceGraph()(container)
+          .graphData(data)
+          .nodeId('id')
+          .nodeLabel(node => {
+            if (!node._label) {
+              const parts = [];
+              if (node.name) parts.push(node.name);
+              if (node.tags?.length) parts.push(`Tags: ${node.tags.join(', ')}`);
+              if (node.categories?.length) parts.push(`Categories: ${node.categories.join(', ')}`);
+              node._label = parts.join('\n');
+            }
+            return node._label;
+          })
+          .nodeVal(NODE_SIZE)
+          .nodeColor(node => node._color)
+          .linkColor('#8b949e')
+          .nodeRelSize(4)
+          .linkWidth(link => Math.sqrt(link.value) * 0.4)
+          .linkDirectionalParticles(0)
+          .maxZoom(20)
+          .minZoom(0.01)
+          .enableNodeDrag(true)
+          .enableZoomInteraction(true);
+        
+        graph
+          .d3Force('link', d3.forceLink()
+            .id(d => d.id)
+            .distance(60)
+            .strength(0.5)
+          )
+          .d3Force('charge', d3.forceManyBody()
+            .strength(-40)
+            .theta(0.8) // Barnes-Hut approximation - O(n log n) instead of O(n²)
+            .distanceMax(150)
+          )
+          .d3Force('center', d3.forceCenter(width / 2, height / 2))
+          .d3Force('collision', d3.forceCollide(NODE_SIZE * 1.2))
+          .d3AlphaDecay(0.05) 
+          .d3VelocityDecay(0.4) 
+          .cooldownTicks(50) 
+          .warmupTicks(20); 
+        
+        graph.onNodeHover(node => {
+          if (node === hoveredNode) return; // Skip if same node
+          
+          if (hoveredNode) {
+            hoveredNode._color = NODE_COLORS[hoveredNode.section] || NODE_COLORS.default;
+          }
+          
+          hoveredNode = node;
+          if (node) {
+            node._color = NODE_COLORS.highlight;
+          }
+        });
+        
+        graph.onNodeClick(node => {
+          if (node?.id) window.location.href = node.id;
+        });
+        
+        fitNodes(graph, 0);
+        
+        let hasStabilized = false;
+        graph.onEngineStop(() => {
+          if (!hasStabilized) {
+            fitNodes(graph, 300);
+            hasStabilized = true;
+          }
+        });
+        
+        fullscreenBtn.addEventListener('click', () => {
+          isFullscreen = !isFullscreen;
+          
+          if (isFullscreen) {
+            const styles = {
+              transition: 'all 250ms ease-in-out',
+              position: 'fixed',
+              top: '5%',
+              left: '5%',
+              width: '90%',
+              height: '90%',
+              zIndex: '999'
+            };
+            
+            Object.assign(container.style, styles);
+            
+            const overlay = document.createElement('div');
+            overlay.id = 'graph-overlay';
+            Object.assign(overlay.style, {
+              position: 'fixed',
+              top: '0',
+              left: '0',
+              width: '100%',
+              height: '100%',
+              backgroundColor: 'rgba(0,0,0,0)',
+              transition: 'background-color 250ms ease-in-out',
+              zIndex: '998'
+            });
+            
+            document.body.appendChild(overlay);
+            
+            requestAnimationFrame(() => {
+              overlay.style.backgroundColor = 'rgba(0,0,0,0.7)';
+            });
+            
+            Object.assign(fullscreenBtn.style, {
+              position: 'fixed',
+              top: '6%',
+              right: '6%',
+              zIndex: '1000'
+            });
+            fullscreenBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 15 6 6m-6-6v4.8m0-4.8h4.8M9 19.8V15m0 0H4.2M9 15l-6 6M15 4.2V9m0 0h4.8M15 9l6-6M9 4.2V9m0 0H4.2M9 9 3 3"/></svg>`;
+          } else {
+            const styles = {
+              position: 'relative',
+              top: '',
+              left: '',
+              width: '100%',
+              height: '500px',
+              zIndex: ''
+            };
+            
+            Object.assign(container.style, styles);
+            
+            const overlay = document.getElementById('graph-overlay');
+            if (overlay) {
+              overlay.style.backgroundColor = 'rgba(0,0,0,0)';
+              setTimeout(() => overlay.remove(), 250);
+            }
+            
+            Object.assign(fullscreenBtn.style, {
+              position: 'absolute',
+              top: '10px',
+              right: '10px',
+              zIndex: '2'
+            });
+            fullscreenBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>`;
+          }
+          
+          setTimeout(() => {
+            if (graph) {
+              requestAnimationFrame(() => {
+                graph.width(container.clientWidth);
+                graph.height(container.clientHeight);
+                graph.d3Force('center', d3.forceCenter(container.clientWidth / 2, container.clientHeight / 2));
+                fitNodes(graph, 250);
+              });
+            }
+          }, 260);
+        });
+        
+        let resizeRAF;
+        window.addEventListener('resize', () => {
+          if (resizeRAF) cancelAnimationFrame(resizeRAF);
+          
+          resizeRAF = requestAnimationFrame(() => {
+            if (graph) {
+              graph.width(container.clientWidth);
+              graph.height(container.clientHeight);
+              graph.d3Force('center', d3.forceCenter(container.clientWidth / 2, container.clientHeight / 2));
+              fitNodes(graph, 250);
+            }
+          });
+        });
+      })
+      .catch(error => {
+        clearTimeout(timeoutId);
+        console.error('Error loading graph data:', error);
+        container.innerHTML = `<div style="display:flex;justify-content:center;align-items:center;height:100%;">Error loading graph: ${error.name === 'AbortError' ? 'Request timed out' : error.message}</div>`;
+      });
+  };
+  
+  initializeGraph();
 });
 </script>
 {{ end }}
