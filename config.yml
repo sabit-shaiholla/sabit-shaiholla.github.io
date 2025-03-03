@@ -10,6 +10,7 @@ buildDrafts: false
 buildFuture: false
 buildExpired: false
 enableEmoji: true
+googleAnalytics: G-MD41PG75BY
 
 defaultContentLanguage: en
 languageCode: en-us
@@ -133,6 +134,9 @@ params:
     - name: linkedin
       url: "https://linkedin.com/in/sabit-shaiholla"
 
+  analytics:
+    google: 
+      SiteVerificationTag: "G-MD41PG75BY"
   # fuseOpts:
   #   isCaseSensitive: false
   #   shouldSort: true
