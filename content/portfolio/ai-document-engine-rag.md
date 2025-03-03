@@ -20,6 +20,11 @@ My solution combines computer vision, natural language processing, and semantic 
 
 ![Example image of the AI Document Analysis Engine using RAG](/portfolio/ai-document-engine-rag.jpeg)
 
+## Source Code
+
+The complete source code is available on GitHub:
+[AI LLM Tutorials Repository](https://github.com/sabit-shaiholla/ai-llm-tutorials/tree/master)
+
 ## System Architecture
 
 My application follows a four-stage pipeline architecture:
