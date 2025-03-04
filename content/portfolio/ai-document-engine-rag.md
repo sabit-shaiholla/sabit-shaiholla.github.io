@@ -1,7 +1,7 @@
 ---
 title: "AI Document Analysis Engine using RAG"
 date: 2025-03-02
-description: "A type-safe AI news research agent built with Pydantic-AI, Gemini 2.0 Flash, and Tavily Search"
+description: "A type-safe AI document analysis engine built with RAG"
 tags: ["AI", "LLM", "Python", "Gemini", "Pydantic", "RAG", "Tavily"]
 categories: ["AI", "Development", "LLM", "RAG"]
 showToc: true
