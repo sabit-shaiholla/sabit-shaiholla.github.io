@@ -21,7 +21,6 @@
 <script src="https://unpkg.com/force-graph"></script>
 <script>
 (() => {
-  // Constants - defined outside for better performance and memory usage
   const NODE_COLORS = Object.freeze({
     til: '#58a6ff',
     portfolio: '#7ee787',
@@ -35,9 +34,10 @@
     HIGHLIGHT_COLOR: '#c9d1d9',
     DEFAULT_WIDTH: 1.5,
     HIGHLIGHT_WIDTH: 2.5,
-    PARTICLE_SIZE: 4,
+    PARTICLE_SIZE: 6,
     PARTICLE_SPEED: 0.01,
     PARTICLE_TRAIN_LENGTH: 4,
+    DEFAULT_PARTICLE_LENGTH: 2,
     PARTICLE_DROP_RATE: 0.7
   });
   
@@ -53,17 +53,15 @@
     COLLISION_RADIUS: 4.8, // NODE_SIZE * 1.2
     ALPHA_DECAY: 0.028,    // Optimized for faster stabilization
     VELOCITY_DECAY: 0.4,
-    COOLDOWN_TICKS: 30,    // Reduced from 50
-    WARMUP_TICKS: 10,      // Reduced from 20
+    COOLDOWN_TICKS: 30,
+    WARMUP_TICKS: 10,
     TRANSITION_DURATION: 250,
     FIT_SCALE_FACTOR: 0.95,
     WORKER_BATCH_SIZE: 500
   });
   
-  // Use performance.now() for more accurate timing
   const getTime = typeof performance !== 'undefined' ? performance.now.bind(performance) : Date.now;
   
-  // Reusable weak map for caching calculations
   const calculationCache = new WeakMap();
   
   class GraphVisualizer {
@@ -82,7 +80,6 @@
       this.isRendering = false;
       this.tickCount = 0;
       
-      // Pre-bind methods to avoid creating new function objects
       this.handleResize = this.handleResize.bind(this);
       this.handleFullscreenToggle = this.handleFullscreenToggle.bind(this);
       this.handleNodeHover = this.handleNodeHover.bind(this);
@@ -117,16 +114,12 @@
           return;
         }
         
-        // Preprocess links to ensure proper attributes for visualization
         this.prepareLinksForVisualization(data);
         
-        // Initialize node positions with a more efficient algorithm
         this.assignInitialPositions(data.nodes);
         
-        // Create the graph with optimized settings
         this.createForceGraph(data);
         
-        // Start with optimal view
         requestAnimationFrame(() => this.fitGraph(0));
       } catch (error) {
         const errorMessage = error.name === 'AbortError' 
@@ -144,12 +137,10 @@
       }
       
       data.links.forEach(link => {
-        // Ensure link value exists for width calculations
         if (typeof link.value === 'undefined' || link.value === null) {
           link.value = 1;
         }
         
-        // Pre-calculate link color and width for efficient access
         link._defaultColor = LINK_STYLES.DEFAULT_COLOR;
         link._highlightColor = LINK_STYLES.HIGHLIGHT_COLOR;
         link._defaultWidth = Math.sqrt(link.value) * 0.4 + LINK_STYLES.DEFAULT_WIDTH;
@@ -182,8 +173,6 @@
       const height = this.container.clientHeight;
       const count = nodes.length;
       
-      // Use Fibonacci spiral layout for better initial distribution
-      // More natural than grid layout and better for force layout startup
       const goldenRatio = (1 + Math.sqrt(5)) / 2;
       const angleIncrement = Math.PI * 2 / goldenRatio;
       
@@ -199,7 +188,6 @@
         node._color = NODE_COLORS[node.section] || NODE_COLORS.default;
         node._isHighlighted = false;
         
-        // Precompute label for performance
         if (node.name || node.tags?.length || node.categories?.length) {
           const parts = [];
           if (node.name) parts.push(node.name);
@@ -216,11 +204,9 @@
       const width = this.container.clientWidth;
       const height = this.container.clientHeight;
       
-      // Create graph with optimized settings
       this.graph = ForceGraph()(this.container)
         .graphData(data)
         .nodeId('id')
-        // Use cached labels for better performance
         .nodeLabel(node => node._label)
         .nodeVal(CONSTANTS.NODE_SIZE)
         .nodeColor(node => node._isHighlighted ? NODE_COLORS.highlight : node._color)
@@ -229,8 +215,10 @@
         .linkDirectionalArrowLength(3)
         .linkDirectionalArrowRelPos(1)
         .linkCurvature(0)
-        .linkDirectionalParticles(link => link._isHighlighted ? LINK_STYLES.PARTICLE_TRAIN_LENGTH : 0)
-        .linkDirectionalParticleWidth(link => Math.min(link._highlightWidth, LINK_STYLES.PARTICLE_SIZE))
+        .linkDirectionalParticles(link => link._isHighlighted ? LINK_STYLES.PARTICLE_TRAIN_LENGTH : LINK_STYLES.DEFAULT_PARTICLE_LENGTH)
+        .linkDirectionalParticleWidth(link => link._isHighlighted ? 
+          Math.min(link._highlightWidth * 1.5, LINK_STYLES.PARTICLE_SIZE * 1.2) : 
+          Math.min(link._defaultWidth * 1.2, LINK_STYLES.PARTICLE_SIZE))
         .linkDirectionalParticleSpeed(LINK_STYLES.PARTICLE_SPEED)
         .nodeRelSize(4)
         .maxZoom(20)
@@ -242,7 +230,6 @@
         .cooldownTicks(CONSTANTS.COOLDOWN_TICKS)
         .warmupTicks(CONSTANTS.WARMUP_TICKS);
       
-      // Set up optimized D3 force simulation
       this.graph
         .d3Force('link', d3.forceLink()
           .id(d => d.id)
@@ -257,24 +244,20 @@
         .d3Force('center', d3.forceCenter(width / 2, height / 2))
         .d3Force('collision', d3.forceCollide(CONSTANTS.COLLISION_RADIUS));
       
-      // Set up interaction handlers
       this.graph
         .onNodeHover(this.handleNodeHover)
         .onNodeClick(this.handleNodeClick)
         .onLinkHover(this.handleLinkHover)
         .onEngineStop(this.handleEngineStop);
         
-      // Optimize tick execution to avoid excessive rendering
       const originalTickFn = this.graph.tick;
       this.graph.tick = () => {
         this.tickCount++;
         
-        // Only render on certain frames to improve performance
         if (this.hasStabilized || this.tickCount % 2 === 0) {
           return originalTickFn();
         }
         
-        // Just advance the simulation without rendering
         const forceSimulation = this.graph.forceEngine();
         if (forceSimulation && forceSimulation.tick) {
           forceSimulation.tick();
@@ -287,31 +270,29 @@
     
     handleLinkHover(link) {
       if (!link && this.highlightedLinks.size === 0) {
-        return; // No change needed
+        return;
       }
       
       const { links } = this.graph.graphData();
       
-      // Reset previously highlighted links
       for (const highlightedLink of this.highlightedLinks) {
         highlightedLink._isHighlighted = false;
       }
       this.highlightedLinks.clear();
       
-      // Set new highlight state
       if (link) {
         link._isHighlighted = true;
         this.highlightedLinks.add(link);
       }
       
-      // Refresh the rendering for link-related attributes only
-      // This avoids a full re-render and is more efficient
       if (this.graph) {
-        // Re-evaluate the attributes that might have changed
         this.graph
           .linkColor(l => l._isHighlighted ? l._highlightColor : l._defaultColor)
           .linkWidth(l => l._isHighlighted ? l._highlightWidth : l._defaultWidth)
-          .linkDirectionalParticles(l => l._isHighlighted ? LINK_STYLES.PARTICLE_TRAIN_LENGTH : 0);
+          .linkDirectionalParticles(l => l._isHighlighted ? LINK_STYLES.PARTICLE_TRAIN_LENGTH : LINK_STYLES.DEFAULT_PARTICLE_LENGTH)
+          .linkDirectionalParticleWidth(l => l._isHighlighted ? 
+            Math.min(l._highlightWidth * 1.5, LINK_STYLES.PARTICLE_SIZE * 1.2) : 
+            Math.min(l._defaultWidth * 1.2, LINK_STYLES.PARTICLE_SIZE));
       }
     }
     
@@ -320,7 +301,6 @@
         return { minX: 0, maxX: 0, minY: 0, maxY: 0 };
       }
       
-      // Use reduce for a single pass through the data
       return nodes.reduce((box, node) => {
         if (!node) return box;
         
@@ -350,7 +330,6 @@
       const width = this.container.clientWidth;
       const height = this.container.clientHeight;
       
-      // Check if we have cached bounding box to avoid recalculation
       let box;
       const nodeCache = calculationCache.get(nodes);
       
@@ -377,12 +356,10 @@
       const centerX = (box.minX + box.maxX) / 2;
       const centerY = (box.minY + box.maxY) / 2;
       
-      // Use a single animation frame for both operations
       requestAnimationFrame(() => {
         this.graph.centerAt(centerX, centerY, duration);
         this.graph.zoom(scale, duration);
         
-        // Reset rendering flag after transition completes
         setTimeout(() => {
           this.isRendering = false;
         }, duration + 50);
@@ -421,7 +398,6 @@
       
       const { nodes, links } = this.graph.graphData();
       
-      // Reset all nodes and links first
       for (const highlightedNode of this.highlightedNodes) {
         const n = nodes.find(n => n.id === highlightedNode);
         if (n) n._isHighlighted = false;
@@ -436,17 +412,14 @@
       this.hoveredNode = node;
       
       if (node) {
-        // Highlight the hovered node
         node._isHighlighted = true;
         this.highlightedNodes.add(node.id);
         
-        // Find and highlight connected links and nodes
         const connectedLinks = this.findConnectedLinks(node.id);
         for (const link of connectedLinks) {
           link._isHighlighted = true;
           this.highlightedLinks.add(link);
           
-          // Highlight connected nodes too
           const sourceId = link.source.id || link.source;
           const targetId = link.target.id || link.target;
           
@@ -465,12 +438,14 @@
         }
       }
       
-      // Refresh the graph with highlighting changes
       this.graph
         .nodeColor(n => n._isHighlighted ? NODE_COLORS.highlight : n._color)
         .linkColor(l => l._isHighlighted ? l._highlightColor : l._defaultColor)
         .linkWidth(l => l._isHighlighted ? l._highlightWidth : l._defaultWidth)
-        .linkDirectionalParticles(l => l._isHighlighted ? LINK_STYLES.PARTICLE_TRAIN_LENGTH : 0);
+        .linkDirectionalParticles(l => l._isHighlighted ? LINK_STYLES.PARTICLE_TRAIN_LENGTH : LINK_STYLES.DEFAULT_PARTICLE_LENGTH)
+        .linkDirectionalParticleWidth(l => l._isHighlighted ? 
+          Math.min(l._highlightWidth * 1.5, LINK_STYLES.PARTICLE_SIZE * 1.2) : 
+          Math.min(l._defaultWidth * 1.2, LINK_STYLES.PARTICLE_SIZE));
     }
     
     handleNodeClick(node) {
@@ -501,7 +476,6 @@
         this.graph.height(height);
         this.graph.d3Force('center', d3.forceCenter(width / 2, height / 2));
         
-        // Mark the node cache as dirty since positions may shift
         const { nodes } = this.graph.graphData();
         if (nodes && calculationCache.has(nodes)) {
           const cache = calculationCache.get(nodes);
@@ -544,7 +518,6 @@
         
         document.body.appendChild(overlay);
         
-        // Use RAF for smoother transition
         requestAnimationFrame(() => {
           overlay.style.backgroundColor = 'rgba(0,0,0,0.7)';
         });
@@ -571,7 +544,6 @@
         if (overlay) {
           overlay.style.backgroundColor = 'rgba(0,0,0,0)';
           
-          // Remove overlay after transition completes
           setTimeout(() => {
             if (overlay.parentNode) {
               overlay.parentNode.removeChild(overlay);
@@ -589,7 +561,6 @@
         this.fullscreenBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>`;
       }
       
-      // Update graph dimensions after the transition
       setTimeout(() => {
         if (this.graph) {
           const width = container.clientWidth;
@@ -616,7 +587,6 @@
     }
   }
   
-  // Initialize the graph when DOM is ready
   document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('graph-container');
     const fullscreenBtn = document.getElementById('fullscreen-btn');
@@ -629,11 +599,9 @@
     const visualizer = new GraphVisualizer(container, fullscreenBtn);
     visualizer.initialize();
     
-    // Store reference for cleanup
     window.graphVisualizer = visualizer;
   });
   
-  // Cleanup on page unload to prevent memory leaks
   window.addEventListener('beforeunload', () => {
     if (window.graphVisualizer) {
       window.graphVisualizer.cleanup();
