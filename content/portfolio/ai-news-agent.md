@@ -3,7 +3,7 @@ title: "AI News Research Agent"
 date: 2025-02-19
 description: "A type-safe AI news research agent built with Pydantic-AI, Gemini 2.0 Flash, and Tavily Search"
 tags: ["ai", "llm", "python", "gemini", "pydantic"]
-categories: ["AI", "Development", "LLM"]
+categories: ["AI", "ML Engineering", "LLM"]
 showToc: true
 ---
 

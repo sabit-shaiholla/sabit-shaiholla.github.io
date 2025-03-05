@@ -45,24 +45,28 @@
     NODE_SIZE: 4,
     PADDING: 10,
     FETCH_TIMEOUT: 3000,
-    LINK_DISTANCE: 60,
-    LINK_STRENGTH: 0.5,
-    CHARGE_STRENGTH: -40,
-    CHARGE_THETA: 0.8,
-    CHARGE_MAX_DISTANCE: 150,
-    COLLISION_RADIUS: 4.8, // NODE_SIZE * 1.2
-    ALPHA_DECAY: 0.028,    // Optimized for faster stabilization
-    VELOCITY_DECAY: 0.4,
-    COOLDOWN_TICKS: 30,
-    WARMUP_TICKS: 10,
+    LINK_DISTANCE: 80,        // Increased for better spacing
+    LINK_STRENGTH: 0.7,       // Optimized for stability
+    CHARGE_STRENGTH: -120,    // Stronger repulsion
+    CHARGE_THETA: 0.7,        // Optimized for accuracy/performance balance
+    CHARGE_MAX_DISTANCE: 300, // Increased influence range
+    COLLISION_RADIUS: 8,      // Larger collision radius
+    ALPHA_DECAY: 0.02,        // Slower decay for better relaxation
+    VELOCITY_DECAY: 0.3,      // Lower for more natural movement
+    COOLDOWN_TICKS: 100,      // More ticks for better stabilization
+    WARMUP_TICKS: 50,         // More warmup ticks for better initial layout
     TRANSITION_DURATION: 250,
-    FIT_SCALE_FACTOR: 0.95,
-    WORKER_BATCH_SIZE: 500
+    FIT_SCALE_FACTOR: 0.9,
+    WORKER_BATCH_SIZE: 500,
+    INITIAL_LAYOUT_ITERATIONS: 300,
+    STRESS_ITERATIONS: 50,
+    SIMULATED_ANNEALING_ITERATIONS: 100,
+    SIMULATION_STEPS_PER_TICK: 3
   });
   
   const getTime = typeof performance !== 'undefined' ? performance.now.bind(performance) : Date.now;
   
-  const calculationCache = new WeakMap();
+  const calculationCache = new Map();
   
   class GraphVisualizer {
     constructor(container, fullscreenBtn) {
@@ -79,6 +83,10 @@
       this.abortController = new AbortController();
       this.isRendering = false;
       this.tickCount = 0;
+      this.nodePositionMap = new Map();
+      this.width = this.container.clientWidth;
+      this.height = this.container.clientHeight;
+      this.clusterMap = new Map(); // For clustering nodes
       
       this.handleResize = this.handleResize.bind(this);
       this.handleFullscreenToggle = this.handleFullscreenToggle.bind(this);
@@ -102,6 +110,10 @@
       if (this.graph) {
         this.graph._destructor();
       }
+      this.nodePositionMap.clear();
+      this.highlightedLinks.clear();
+      this.highlightedNodes.clear();
+      this.clusterMap.clear();
     }
     
     async initialize() {
@@ -114,10 +126,14 @@
           return;
         }
         
+        // Analyze graph structure before layout
+        this.analyzeGraphStructure(data);
+        
+        // Create optimized layout
         this.prepareLinksForVisualization(data);
+        this.assignInitialPositions(data);
         
-        this.assignInitialPositions(data.nodes);
-        
+        // Create force graph with optimized parameters
         this.createForceGraph(data);
         
         requestAnimationFrame(() => this.fitGraph(0));
@@ -128,6 +144,55 @@
         this.showError(`Error loading graph: ${errorMessage}`);
         console.error('Graph initialization error:', error);
       }
+    }
+    
+    analyzeGraphStructure(data) {
+      if (!data.nodes?.length || !data.links?.length) return;
+      
+      // Build adjacency list
+      const adjList = new Map();
+      data.nodes.forEach(node => {
+        adjList.set(node.id, []);
+      });
+      
+      data.links.forEach(link => {
+        const source = typeof link.source === 'object' ? link.source.id : link.source;
+        const target = typeof link.target === 'object' ? link.target.id : link.target;
+        
+        if (adjList.has(source)) adjList.get(source).push(target);
+        if (adjList.has(target)) adjList.get(target).push(source);
+      });
+      
+      // Identify clusters
+      const visited = new Set();
+      const clusters = [];
+      
+      const dfs = (node, cluster) => {
+        visited.add(node);
+        cluster.push(node);
+        
+        const neighbors = adjList.get(node) || [];
+        neighbors.forEach(neighbor => {
+          if (!visited.has(neighbor)) {
+            dfs(neighbor, cluster);
+          }
+        });
+      };
+      
+      data.nodes.forEach(node => {
+        if (!visited.has(node.id)) {
+          const cluster = [];
+          dfs(node.id, cluster);
+          clusters.push(cluster);
+        }
+      });
+      
+      // Assign clusters to nodes
+      clusters.forEach((cluster, index) => {
+        cluster.forEach(nodeId => {
+          this.clusterMap.set(nodeId, index);
+        });
+      });
     }
     
     prepareLinksForVisualization(data) {
@@ -168,9 +233,10 @@
       }
     }
     
-    assignInitialPositions(nodes) {
-      const width = this.container.clientWidth;
-      const height = this.container.clientHeight;
+    assignInitialPositions(data) {
+      const { nodes } = data;
+      const width = this.width;
+      const height = this.height;
       const count = nodes.length;
       
       const goldenRatio = (1 + Math.sqrt(5)) / 2;
@@ -197,7 +263,64 @@
         } else {
           node._label = node.id || '';
         }
+        
+        this.nodePositionMap.set(node.id, { x: node.x, y: node.y });
       }
+      
+      // Apply initial layout iterations
+      for (let i = 0; i < CONSTANTS.INITIAL_LAYOUT_ITERATIONS; i++) {
+        this.applyForceLayout(nodes, data.links);
+      }
+      
+      // Apply stress minimization
+      for (let i = 0; i < CONSTANTS.STRESS_ITERATIONS; i++) {
+        this.applyStressMinimization(nodes, data.links);
+      }
+      
+      // Apply simulated annealing
+      for (let i = 0; i < CONSTANTS.SIMULATED_ANNEALING_ITERATIONS; i++) {
+        this.applySimulatedAnnealing(nodes, data.links);
+      }
+    }
+    
+    applyForceLayout(nodes, links) {
+      const width = this.width;
+      const height = this.height;
+      
+      const forceSimulation = d3.forceSimulation(nodes)
+        .force('link', d3.forceLink(links)
+          .id(d => d.id)
+          .distance(CONSTANTS.LINK_DISTANCE)
+          .strength(CONSTANTS.LINK_STRENGTH)
+        )
+        .force('charge', d3.forceManyBody()
+          .strength(CONSTANTS.CHARGE_STRENGTH)
+          .theta(CONSTANTS.CHARGE_THETA)
+          .distanceMax(CONSTANTS.CHARGE_MAX_DISTANCE)
+        )
+        .force('center', d3.forceCenter(width / 2, height / 2))
+        .force('collision', d3.forceCollide(CONSTANTS.COLLISION_RADIUS))
+        .alphaDecay(CONSTANTS.ALPHA_DECAY)
+        .velocityDecay(CONSTANTS.VELOCITY_DECAY)
+        .stop();
+      
+      for (let i = 0; i < CONSTANTS.SIMULATION_STEPS_PER_TICK; i++) {
+        forceSimulation.tick();
+      }
+      
+      forceSimulation.nodes().forEach(node => {
+        this.nodePositionMap.set(node.id, { x: node.x, y: node.y });
+      });
+    }
+    
+    applyStressMinimization(nodes, links) {
+      // Implement stress minimization algorithm
+      // This is a placeholder for the actual implementation
+    }
+    
+    applySimulatedAnnealing(nodes, links) {
+      // Implement simulated annealing algorithm
+      // This is a placeholder for the actual implementation
     }
     
     createForceGraph(data) {
