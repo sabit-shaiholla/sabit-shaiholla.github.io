@@ -2,6 +2,7 @@
 title: "Building a Scalable E-Commerce Platform with Docker Compose and Spring Microservices"
 date: 2024-11-02
 description: "A practical implementation of a microservices-based e-commerce platform using Spring Boot, Docker Compose, and event-driven architecture"
+summary: "A practical implementation of a microservices-based e-commerce platform using Spring Boot, Docker Compose, and event-driven architecture"
 tags: ["Microservices", "Spring Boot", "Docker Compose", "Event-Driven", "API Gateway", "Java"]
 categories: ["System Architecture", "Backend Development", "Software Engineering"]
 showToc: true

@@ -2,6 +2,7 @@
 title: "AI Document Analysis Engine using RAG"
 date: 2025-03-02
 description: "A type-safe AI document analysis engine built with RAG"
+summary: "A type-safe AI document analysis engine built with RAG"
 tags: ["AI", "LLM", "Python", "Gemini", "Pydantic", "RAG", "Tavily"]
 categories: ["AI", "ML Engineering", "LLM", "RAG"]
 showToc: true
