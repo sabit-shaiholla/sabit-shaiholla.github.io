@@ -37,6 +37,10 @@ languages:
           name: Portfolio
           url: /portfolio/
           weight: 30
+        - identifier: resume
+          name: Resume
+          url: /resume/
+          weight: 35
         - identifier: random
           name: Random
           url: /random/
@@ -127,6 +131,8 @@ params:
         url: /portfolio/
       - name: Random
         url: /random/
+      - name: Resume
+        url: /resume/
 
   socialIcons:
     - name: github
