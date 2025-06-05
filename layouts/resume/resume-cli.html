@@ -1,0 +1,443 @@
+{{/* layouts/resume/single.html */}}
+{{ define "main" }}
+  <section class="resume-container">
+    <div class="resume-terminal">
+
+      <div id="terminal-output"></div>
+
+      <div class="input-wrapper">
+        <span class="prompt-text">sabit-shaikholla@resume:$&nbsp;</span>
+        <div class="input-autocomplete-wrapper">
+          <input
+            type="text"
+            id="cmd-input"
+            autocomplete="off"
+            spellcheck="false"
+            autofocus
+          />
+          <div id="autocomplete-list" class="autocomplete-items"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .resume-container {
+      max-width: 800px;       
+      margin: 1rem auto;      
+      padding: 0 1rem;
+    }
+
+    .resume-terminal {
+      background-color: #1e1e1e;
+      border-radius: 6px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+      padding: 1rem 1rem 3rem 1rem;
+      color: #cccccc;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 0.95rem;
+      line-height: 1.3;
+      overflow: hidden;      
+      position: relative;    
+    }
+
+    #terminal-output {
+      max-height: 450px;      
+      overflow-y: auto;
+      margin-bottom: 0.3rem;  
+      white-space: pre-wrap;  
+      word-break: break-word;
+    }
+
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      left: 1rem;
+      right: 1rem;
+      bottom: 1rem;
+      padding-top: 0.25rem;
+      padding-bottom: 0.25rem;
+      border-top: 1px solid #333; 
+      background-color: #1e1e1e;  
+    }
+
+    .prompt-text {
+      color: #00ff00;
+      flex-shrink: 0;
+      font-weight: bold;
+    }
+
+    .input-autocomplete-wrapper {
+      position: relative;
+      flex-grow: 1;
+    }
+
+    #cmd-input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #00ff00;         
+      font-family: inherit;
+      font-size: inherit;
+      width: 100%;
+      caret-color: #00ff00;
+    }
+
+    .autocomplete-items {
+      position: absolute;
+      top: 100%;             
+      left: 0;               
+      right: 0;              
+      background: #1e1e1e;    
+      max-height: 140px;
+      overflow-y: auto;
+      z-index: 50;
+      display: none;         
+    }
+
+    .autocomplete-items div {
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      color: #cccccc;        
+      white-space: nowrap;
+    }
+
+    .autocomplete-items div:hover,
+    .autocomplete-active {
+      background-color: #333; 
+      color: #ffffff;
+    }
+
+    .cmd-echo {
+      color: #00ff00;
+      white-space: pre-wrap;
+    }
+
+    #terminal-output a {
+      color: #00aeff;        
+      text-decoration: underline;
+    }
+  </style>
+
+  <script>
+    (function() {
+      const commands = {
+        help:
+`Usage:
+  [command]
+
+Available commands:
+  help         Show this help message.
+  whois        Display personal information.
+  skills       List technical skills.
+  experience   Show work experience.
+  education    Display educational background.
+  projects     Show project list.
+  contact      Show contact details.
+  motivation   Motivational speech.
+
+Example: type 'whois' and press ↵ to see profile.`,
+
+        whois:
+`<b>Name</b>: Sabit Shaikholla
+<b>Profession</b>: Senior Systems Engineer
+<b>Current location</b>: Almaty, Kazakhstan
+<b>Homepage</b>: <a href="https://sabit-shaiholla.github.io/" target="_blank">sabit-shaiholla.github.io</a>
+
+Results-driven Senior Systems Engineer with 5 years of experience delivering measurable outcomes including $2M cost savings and 30% efficiency improvements through technical solutions.
+Seeking to leverage expertise in system architecture, process optimization, and cross-functional leadership to drive operational excellence.`,
+
+        skills:
+`Category                        | Items
+--------------------------------+------------------------------------
+Business & System Analysis      | Business Process Modeling
+                                | Requirements Gathering
+                                | Solution Design
+                                | Technical Discovery
+                                | End-to-End Testing
+                                | Agile Methodologies
+                                | Microservices Architecture
+                                | API Design & Integration
+                                | DevOps Practices
+--------------------------------+------------------------------------
+Data Analysis & Visualization   | SQL
+                                | Tableau
+                                | Power BI
+--------------------------------+------------------------------------
+Programming                     | Java (Spring Boot)
+                                | Python
+--------------------------------+------------------------------------
+Database Systems                | Oracle PL/SQL
+                                | PostgreSQL
+                                | MySQL
+                                | MongoDB (NoSQL)
+--------------------------------+------------------------------------
+Cloud Platforms                 | AWS
+                                | Azure
+                                | Google Cloud Platform
+                                |  (BigQuery, Cloud Functions)
+--------------------------------+------------------------------------
+Tools & Technologies            | Git
+                                | Docker
+                                | Kafka
+                                | Redis
+                                | Kubernetes
+                                | RabbitMQ
+                                | ELK stack
+                                | REST APIs
+                                | GraphQL`,
+
+        experience:
+`<b>Position</b>: <em>Senior Systems Engineer</em>
+<b>Company</b>: <a href="https://www.kcell.kz/en/about" target="_blank">Kcell</a>
+<b>Location</b>: Almaty, Kazakhstan
+<b>Working Period</b>: September 2021 – July 2022
+- Led migration from monolithic billing system to microservices, cutting costs by $300K annually and improving response time by 65%.
+- Developed API gateway integrating 20+ services, reducing incidents by 40%.
+- Designed CI/CD pipeline for iOS/Android/Web SuperApp dev, reducing Time-to-Market from 3 months to 3 weeks with 99.9% crash-free rate.
+- Established DevOps practices across 6 teams, boosting deployment frequency from bi-weekly to daily and reducing MTTR by 60%.
+- Implemented automated testing via Postman across 100+ APIs, capturing 95% of bugs pre-deployment.
+
+<b>Position</b>: <em>Lead Systems Engineer</em>
+<b>Company</b>: <a href="https://www.kcell.kz/en/about" target="_blank">Kcell</a>
+<b>Location</b>: Almaty, Kazakhstan
+<b>Working Period</b>: July 2022 –April 2023
+- Improved team productivity by 15% while leading 10 engineers on Activ & Kcell SuperApps platforms.
+- Directed architectural redesign of SuperApp serving 3M+ users, achieving 99.99% uptime and reducing latency by 60%.
+- Created system health monitoring for a 20+ component stack, reducing outages by 70% through proactive issue detection.
+- Reduced user complaints by 85% and increased NPS from 2.5 to 4.1 via NLP & data analytics on user feedback.
+- Optimized system integration between BSS/OSS, ESB, ordering, and CVM.
+
+<b>Position</b>: <em>Senior Systems Engineer</em>
+<b>Company</b>: <a href="https://www.netcracker.com/" target="_blank">Netcracker Technology</a>
+<b>Location</b>: Waltham, MA, USA (Remote)
+<b>Working Period</b>: April 2023 – Present
+- Increased efficiency by 30% through scalable solution architecture, system analysis, and end-to-end testing for mobile & web apps.
+- Led technical discovery & solution design for Danish Nuuday telecom’s digital transformation, generating $2M annual cost savings.
+- Implemented E2E testing framework across 30+ microservices, reducing production defects by 75% and achieving 95% test coverage.
+- Built feature-flagging system for PWA serving 2M+ daily users, cutting release cycle time from 6 weeks to 1 week.`,
+
+        education:
+`<b>Degree</b>: Bachelor of Electrical & Electronic Engineering
+<b>University</b>: Nazarbayev University
+<b>Location</b>: Astana, Kazakhstan
+<b>Graduation Year</b>: 2019
+
+<b>Degree</b>: Master of Engineering Management
+<b>University</b>: Nazarbayev University
+<b>Location</b>: Astana, Kazakhstan
+<b>Graduation Year</b>: 2021
+
+<b>Degree</b>: Master of Digital Transformation
+<b>University</b>: University of Applied Sciences and Arts Dortmund
+<b>Location</b>: Dortmund, Germany
+<b>Graduation Year</b>: 2021`,
+
+        projects:
+`- <b>Football Oracle</b>: Football Oracle is a Spring Boot–based application for managing football data with secure JWT authentication, PostgreSQL storage, RESTful APIs, SonarQube quality checks, and Docker deployment. 
+Link: <a href="https://github.com/sabit-shaiholla/football-oracle" target="_blank">github.com/sabit-shaiholla/football-oracle</a>
+
+- <b>E-commerce Microservices</b>: E-commerce Microservices is a Spring Boot–powered, microservices-based platform featuring dynamic service discovery and event-driven communication to build scalable online stores. 
+Link: <a href="https://github.com/sabit-shaiholla/ecommerce-microservices" target="_blank">github.com/sabit-shaiholla/ecommerce-microservices</a>
+
+- <b>AI & LLM Tutorials</b>: AI & LLM Tutorials provides hands-on, code-driven tutorials to teach developers how to build and fine-tune large language models and related AI mechanisms. 
+Link: <a href="https://github.com/sabit-shaiholla/ai-llm-tutorials" target="_blank">github.com/sabit-shaiholla/ai-llm-tutorials</a>
+
+- <b>Corrective RAG & OpenEvals</b>: Corrective RAG & OpenEvals implements a corrective retrieval-augmented-generation pipeline using OpenEvals on LangGraph to iteratively improve LLM outputs. 
+Link: <a href="https://github.com/sabit-shaiholla/corrective-rag-openevals" target="_blank">github.com/sabit-shaiholla/corrective-rag-openevals</a>
+
+- <b>Kcell & Activ SuperApp</b>: It is an all-in-one mobile application that combines telecom services, rewards, a loyalty program, and an online shop into one platform for users in Kazakhstan. 
+Link: <a href="https://kcell.kz" target="_blank">kcell.kz</a> <a href="https://activ.kz" target="_blank">activ.kz</a>`,
+
+        contact:
+`Email: <a href="mailto:saba.shaiholla@gmail.com">saba.shaiholla@gmail.com</a>
+Phone: <a href="tel:+77012116334">+7 701 211 6334</a>
+LinkedIn: <a href="https://www.linkedin.com/in/sabit-shaiholla" target="_blank">linkedin.com/in/sabit-shaiholla</a>
+GitHub: <a href="https://github.com/sabit-shaiholla" target="_blank">github.com/sabit-shaiholla</a>`,
+
+        motivation:
+`<a href="https://youtu.be/dQw4w9WgXcQ?si=IFdpbC1_nWG9QprT" target="_blank">Motivational speech</a>`
+      };
+
+      const outputDiv = document.getElementById("terminal-output");
+      const inputField = document.getElementById("cmd-input");
+      const autocompleteContainer = document.getElementById("autocomplete-list");
+
+      const asciiArt =
+      "  ____          _      _  _                              \n" +
+      " / ___|   __ _ | |__  (_)| |_                             \n" +
+      " \\___ \\  / _` || '_ \\ | || __|                            \n" +
+      "  ___) || (_| || |_) || || |_                             \n" +
+      " |____/  \\__,_||_.__/ |_| \\__|                            \n" +
+      "  ____   _             _  _     _             _  _       \n" +
+      " / ___| | |__    __ _ (_)| | __| |__    ___  | || |  __ _ \n" +
+      " \\___ \\ | '_ \\  / _` || || |/ /| '_ \\  / _ \\ | || | / _` |\n" +
+      "  ___) || | | || (_| || ||   < | | | || (_) || || || (_| |\n" +
+      " |____/ |_| |_| \\__,_||_||_|\\_\\|_| |_| \\___/ |_||_| \\__,_|\n" +
+      "                                                          \n";
+      const welcomeMsg = 
+      "Welcome to my resume CLI!\n" +
+      "Type 'help' and press ↵ to see available commands.\n\n";
+
+      outputDiv.innerHTML =
+      "<div style=\"color: #ffffff; line-height:1; white-space: pre;\">" +
+        asciiArt +
+      "</div><br>" +
+      "<div>" + welcomeMsg.replace(/\n/g, "<br>") + "</div>";
+
+      let history = [];
+      let historyIndex = 0;
+      let currentFocus = -1;
+
+      function formatOutput(text) {
+        return text.replace(/\\n/g, "<br>");
+      }
+
+      function runCommand(cmd) {
+        if (!cmd) return;
+
+        const safeCmd = cmd
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+        outputDiv.innerHTML +=
+          `<div>` +
+            `<span class="prompt-text">sabit-shaikholla@resume:$ </span>` +
+            `<span class="cmd-echo">${safeCmd}</span>` +
+          `</div>`;
+
+        if (commands[cmd]) {
+          outputDiv.innerHTML +=
+            `<div>${formatOutput(commands[cmd])}</div><br>`;
+        } else {
+          const errMsg = `Command not found. Type 'help' to list commands.`;
+          outputDiv.innerHTML +=
+            `<div>${formatOutput(errMsg)}</div><br>`;
+        }
+
+        outputDiv.scrollTop = outputDiv.scrollHeight;
+      }
+
+      function closeAutocomplete() {
+        autocompleteContainer.style.display = "none";
+        autocompleteContainer.innerHTML = "";
+        currentFocus = -1;
+      }
+
+      function addActive(items) {
+        if (!items) return;
+        removeActive(items);
+        if (currentFocus >= items.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = items.length - 1;
+        items[currentFocus].classList.add("autocomplete-active");
+      }
+
+      function removeActive(items) {
+        for (let i = 0; i < items.length; i++) {
+          items[i].classList.remove("autocomplete-active");
+        }
+      }
+
+      inputField.addEventListener("keydown", function(e) {
+        const val = this.value;
+        const list = autocompleteContainer.getElementsByTagName("div");
+
+        if (e.key === "Tab") {
+          if (list.length > 0) {
+            if (currentFocus > -1) {
+              this.value = list[currentFocus]
+                .getElementsByTagName("input")[0].value;
+            } else {
+              this.value = list[0]
+                .getElementsByTagName("input")[0].value;
+            }
+          }
+          e.preventDefault();
+          return;
+        }
+
+        if (e.key === "ArrowDown") {
+          if (autocompleteContainer.style.display === "block" && list.length > 0) {
+            currentFocus++;
+            addActive(list);
+            e.preventDefault();
+          } else {
+            if (history.length > 0) {
+              historyIndex = Math.min(historyIndex + 1, history.length);
+              this.value = history[historyIndex] || "";
+            }
+            e.preventDefault();
+          }
+          return;
+        }
+
+        if (e.key === "ArrowUp") {
+          if (autocompleteContainer.style.display === "block" && list.length > 0) {
+            currentFocus--;
+            addActive(list);
+            e.preventDefault();
+          } else {
+            if (history.length > 0) {
+              historyIndex = Math.max(historyIndex - 1, 0);
+              this.value = history[historyIndex];
+            }
+            e.preventDefault();
+          }
+          return;
+        }
+
+        if (e.key === "Enter") {
+          e.preventDefault();
+          const cmd = val.trim();
+          if (cmd) {
+            runCommand(cmd);
+            history.push(cmd);
+            historyIndex = history.length;
+          }
+          this.value = "";
+          closeAutocomplete();
+          return;
+        }
+      });
+
+      inputField.addEventListener("input", function() {
+        const val = this.value;
+        closeAutocomplete();
+        if (!val) return;
+
+        currentFocus = -1;
+        const valUpper = val.toUpperCase();
+
+        for (const cmd of Object.keys(commands)) {
+          if (cmd.toUpperCase().startsWith(valUpper)) {
+            const itemDiv = document.createElement("div");
+            itemDiv.innerHTML = "<strong>" + cmd.substr(0, val.length) + "</strong>";
+            itemDiv.innerHTML += cmd.substr(val.length);
+            itemDiv.innerHTML += `<input type='hidden' value='${cmd}'>`;
+
+            itemDiv.addEventListener("click", function() {
+              const fullCmd = this.getElementsByTagName("input")[0].value;
+              inputField.value = fullCmd;
+              closeAutocomplete();
+            });
+
+            autocompleteContainer.appendChild(itemDiv);
+          }
+        }
+
+        if (autocompleteContainer.childElementCount > 0) {
+          autocompleteContainer.style.display = "block";
+        } else {
+          autocompleteContainer.style.display = "none";
+        }
+      });
+
+      document.addEventListener("click", function(e) {
+        if (e.target !== inputField) {
+          closeAutocomplete();
+        }
+      });
+    })();
+  </script>
+{{ end }}
