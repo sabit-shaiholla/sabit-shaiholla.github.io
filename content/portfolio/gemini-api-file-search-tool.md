@@ -39,20 +39,33 @@ The following diagram illustrates the indexing and querying process internally:
 
 ```mermaid
 graph TD
-    subgraph Indexing Process
-        A[Documents] -->|Files API Upload| B(File Storage);
-        A -->|uploadToFileSearchStore API (Bypassing File Storage)| C{Embedding model (gemini-embedding-001)};
-        B -->|Import| C;
-        C --> D[File Search Store (Vector Index)];
+    subgraph Indexing["Indexing process - Offline"]
+        direction LR
+        Docs[Documents] -.-> FileStore(File storage)
+        FileStore -.-> EmbedModel_Idx(Embedding model)
+        EmbedModel_Idx -.-> DB[(Database)]
+        Docs -.-> EmbedModel_Idx
     end
 
-    subgraph Querying Process
-        E[User Prompt] --> F(Gemini Model);
-        F -->|Tool Use Decision| G{Query File Search Store};
-        G --> D;
-        D --> H[Relevant Chunks/Context];
-        H --> F;
-        F --> I[Grounded Answer with Citations];
+    subgraph Querying["Querying process - Realtime"]
+        direction LR
+        User[User] --> Gemini_1[Gemini]
+        Gemini_1 --> Decision{External knowledge helpful?}
+        
+        Decision -- No --> GenAns(Generate answer)
+        GenAns --> FinalAns_1[Final answer]
+        
+        Decision -- Yes --> GenQuery(Generate query/ies)
+        
+        GenQuery --> Query(Query)
+        Query --> EmbedModel_Qry(Embedding model)
+        
+        EmbedModel_Qry --> DB
+        DB --> Context(Context)
+        Context --> Gemini_2[Gemini]
+        Gemini_2 --> FinalAns_2[Final answer]
+        
+        Gemini_2 -->|Requires more search| GenQuery
     end
 ```
 
