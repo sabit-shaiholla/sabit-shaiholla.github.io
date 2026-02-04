@@ -1,41 +1,158 @@
+/* Scientific / Obsidian Graph Aesthetics (Catppuccin Mocha) */
 :root {
-  --primary: #1e1e1e;
-  --secondary: #6c6c6c;
-  --tertiary: #d6d6d6;
-}
-
-[theme="dark"] {
-  --primary: #58a6ff;
-  --secondary: #8b949e;
+  /* Catppuccin Mocha Palette */
+  --graph-bg: #1e1e2e;
+  --graph-panel-bg: rgba(24, 24, 37, 0.8);
+  /* Mantle with opacity */
+  --graph-border: rgba(49, 50, 68, 0.5);
+  /* Surface0/Overlay0 mix */
+  --graph-text: #cdd6f4;
+  /* Text */
+  --graph-accent: #cba6f7;
+  /* Mauve */
+  --graph-btn-hover: rgba(180, 190, 254, 0.1);
+  /* Lavender tint */
 }
 
 #graph-container {
-  background: var(--theme);
-  cursor: pointer;
+  width: 100%;
+  height: 80vh;
+  /* Taller viewport */
+  min-height: 600px;
+  background-color: var(--graph-bg);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  font-family: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
+  /* Coding Terminal feel */
+  cursor: crosshair;
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.3);
+  /* Softer Depth */
+  border: 1px solid var(--graph-border);
 }
 
-#graph-container canvas {
+#graph-container:active {
+  cursor: grabbing;
+}
+
+.graph-wrapper {
+  margin: 0 -2rem;
+  position: relative;
+}
+
+/* Floating Controls */
+.graph-controls {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 10;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: var(--graph-panel-bg);
+  padding: 8px;
   border-radius: 8px;
+  border: 1px solid var(--graph-border);
 }
 
-.node {
+.graph-btn {
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--graph-text);
+  border-radius: 6px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.node:hover {
-  stroke: var(--primary);
-  stroke-width: 2px;
+.graph-btn:hover {
+  background: var(--graph-btn-hover);
+  color: #fff;
+  border-color: var(--graph-border);
+  box-shadow: 0 0 10px rgba(203, 166, 247, 0.1);
+  /* Mauve glow */
 }
 
-.link {
-  stroke-opacity: 0.6;
+.graph-btn svg {
+  width: 18px;
+  height: 18px;
+  opacity: 0.9;
 }
 
-.graph-tooltip {
-  color: var(--content);
-  background: var(--theme);
-  padding: 5px;
-  border-radius: 4px;
-  font-size: 12px;
-  border: 1px solid var(--border);
-} 
+/* Scientific Legend */
+.graph-legend {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--graph-panel-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--graph-border);
+  border-radius: 8px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--graph-text);
+  pointer-events: none;
+  user-select: none;
+  font-weight: 500;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 12px;
+  border-right: 1px solid var(--graph-border);
+}
+
+.legend-item:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  /* Glow is applied in HTML style */
+}
+
+/* Fullscreen Mode override */
+.graph-wrapper.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  margin: 0;
+  background: var(--graph-bg);
+}
+
+.graph-wrapper.fullscreen #graph-container {
+  height: 100% !important;
+  border-radius: 0;
+  border: none;
+}
+
+/* Error State */
+.graph-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #f38ba8;
+  /* Red */
+  font-size: 0.9rem;
+}
