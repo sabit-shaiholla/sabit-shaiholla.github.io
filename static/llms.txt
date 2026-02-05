@@ -1,0 +1,25 @@
+# Sabit Shaikholla
+
+> Solutions- and Data-driven Systems Engineer with 5+ years of experience architecting and implementing enterprise-scale applications. Solution Architect, Systems Engineer, and AI Engineer.
+
+## Portfolio
+
+- [AI News Research Agent](/portfolio/ai-news-agent/): A type-safe AI news research agent built with Pydantic-AI, Gemini 2.0 Flash, and Tavily Search
+- [AI Document Analysis Engine using RAG](/portfolio/ai-document-engine-rag/): A type-safe AI document analysis engine built with RAG
+- [Football Oracle: A Scalable, AI-Driven Platform for Comprehensive Football Player Analytics](/portfolio/football-oracle/): A Java-based platform using Spring Boot, React, PostgreSQL, and Gemini Pro API to provide AI-driven football player analytics and insights
+- [Enhancing LLM Agent Reliability with Corrective RAG and OpenEvals](/portfolio/corrective-rag-openevals/): Learn how combining Corrective RAG and OpenEvals enables LLM agents to verify their sources and answers, resulting in more accurate and reliable AI responses.
+- [Building a Scalable E-Commerce Platform with Docker Compose and Spring Microservices](/portfolio/ecommerce-microservices-project/): A practical implementation of a microservices-based e-commerce platform using Spring Boot, Docker Compose, and event-driven architecture
+- [How I Setup Oracle Cloud Always Free Instance for Gemini API File Search Tool](/portfolio/oracle-cloud-setup-gemini-tool/): Learn how to deploy a Python application on Oracle Cloud Always Free tier, including VCN setup, security rules, Nginx reverse proxy, Let's Encrypt SSL, and automated deployment.
+- [Revolutionizing RAG: Why Gemini File Search Tool is the great RAG-as-a-Service](/portfolio/gemini-api-file-search-tool/): An in-depth look at the Gemini API File Search Tool, a managed RAG solution that simplifies retrieval pipelines, offers semantic search, and provides built-in citations, making it easier for developers to build grounded AI applications.
+
+## Today I Learned
+
+- [Creating a Personal Website with Hugo](/til/hugo-site-generation/): A comprehensive guide on creating a personal website using Hugo static site generator with PaperMod theme, including installation, configuration, and deployment to GitHub Pages
+- [Documenting the 'Why': An Introduction to Architecture Decision Records](/til/adr/): Ever wondered how to keep track of critical architectural decisions in your software projects? Discover how Architecture Decision Records (ADRs) can streamline communication, prevent repeated mistakes, and ensure your team stays aligned and efficient.
+- [Java Logging Best Practices](/til/java-logging-best-practices/): Best practices for logging in Java applications, based on my experience
+
+## Main Pages
+
+- [Resume](/resume/)
+- [Word Cloud](/wordcloud/): Interactive TF-IDF visualization of blog content.
+- [Content Graph](/graph/)
