@@ -1,0 +1,30 @@
+{{ define "main" }}
+
+<article class="post-single">
+    <header class="post-header">
+        <h1 class="post-title">Blog Word Cloud</h1>
+        <div class="post-meta">
+            <span title="Generated from blog corpus">TF-IDF Analysis of Blog Content</span>
+        </div>
+    </header>
+
+    <div class="post-content">
+        <div id="wordcloud-container">
+            <!-- Cloud rendered here -->
+        </div>
+
+        <div class="wordcloud-footer">
+            * Words sized by Relevance Score (Term Frequency-Inverse Document Frequency).
+        </div>
+    </div>
+</article>
+
+<!-- D3 & Cloud Layout -->
+<script src="//unpkg.com/d3@7"></script>
+<script src="//unpkg.com/d3-cloud"></script>
+
+<!-- Word Cloud Logic -->
+{{ $wcJS := resources.Get "js/wordcloud.js" | resources.Minify | resources.Fingerprint }}
+<script src="{{ $wcJS.RelPermalink }}"></script>
+
+{{ end }}

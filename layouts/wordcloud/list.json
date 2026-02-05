@@ -1,0 +1,10 @@
+{{- $pages := where site.RegularPages "Section" "in" (slice "til" "portfolio" "random" "post") -}}
+{{- $corpus := slice -}}
+{{- range $pages -}}
+  {{- $corpus = $corpus | append (dict 
+    "title" .Title 
+    "link" .RelPermalink 
+    "text" .Plain
+  ) -}}
+{{- end -}}
+{{ $corpus | jsonify }}

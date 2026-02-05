@@ -1,0 +1,33 @@
+/* Word Cloud Styling */
+#wordcloud-container {
+    width: 100%;
+    height: 600px;
+    background: #1e1e2e;
+    /* Catppuccin Base */
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(49, 50, 68, 0.5);
+    /* Surface 0 with opacity */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    margin: 2rem 0;
+}
+
+#wordcloud-container svg {
+    display: block;
+    margin: 0 auto;
+}
+
+#wordcloud-container text {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.wordcloud-footer {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: #a6adc8;
+    /* Subtext0 */
+    font-family: 'JetBrains Mono', monospace;
+    text-align: center;
+}
