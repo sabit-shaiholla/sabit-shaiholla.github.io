@@ -1,0 +1,21 @@
+{{- /* Giscus comments: enabled when site.Params.comments is true.
+       Configure values under params.giscus in config.yml.
+       Docs: https://giscus.app */ -}}
+{{- if and (or .Params.comments site.Params.comments) (ne .Params.comments false) site.Params.giscus.repoID }}
+<script src="https://giscus.app/client.js"
+        data-repo="{{ site.Params.giscus.repo | default "sabit-shaiholla/sabit-shaiholla.github.io" }}"
+        data-repo-id="{{ site.Params.giscus.repoID }}"
+        data-category="{{ site.Params.giscus.category | default "Announcements" }}"
+        data-category-id="{{ site.Params.giscus.categoryID }}"
+        data-mapping="{{ site.Params.giscus.mapping | default "pathname" }}"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="{{ site.Params.giscus.theme | default "preferred_color_scheme" }}"
+        data-lang="{{ site.Language.Lang | default "en" }}"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
+{{- end }}

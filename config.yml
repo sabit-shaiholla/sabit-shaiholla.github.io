@@ -110,7 +110,18 @@ params:
   ShowWordCount: true
   ShowRssButtonInSectionTermList: true
   
-  comments: false
+  comments: true
+
+  # Giscus comments (GitHub Discussions-backed).
+  # After enabling Discussions on the repo and installing https://github.com/apps/giscus,
+  # fill in repoID and categoryID from https://giscus.app
+  giscus:
+    repo: "sabit-shaiholla/sabit-shaiholla.github.io"
+    repoID: "R_kgDON5rJbA"
+    category: "General"
+    categoryID: "DIC_kwDON5rJbM4DEGkb"
+    mapping: "pathname"
+    theme: "preferred_color_scheme"
   hidemeta: false
   hideSummary: false
   showtoc: true
