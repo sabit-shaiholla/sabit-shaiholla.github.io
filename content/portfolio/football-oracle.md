@@ -12,7 +12,7 @@ showToc: true
 
 The analysis of football player performance has evolved significantly with the advent of advanced data analytics and artificial intelligence. Traditional scouting methods are increasingly supplemented by data-driven insights, enabling more informed decision-making. Football Oracle addresses this need by providing a comprehensive platform for generating and accessing detailed player analytics reports. This project aims to create a system that is not only functional but also scalable, maintainable, and secure, adhering to best practices in software engineering.
 
-![Example image of the Football Oracle](/portfolio/football-oracle-example.png)
+![Example image of the Football Oracle](/portfolio/football-oracle-example.jpeg)
 
 ## Source Code
 

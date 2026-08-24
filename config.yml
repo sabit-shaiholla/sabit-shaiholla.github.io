@@ -6,6 +6,7 @@ theme: [PaperMod]
 pygmentsUseClasses: true
 enableInlineShortcodes: true
 enableRobotsTXT: true
+enableGitInfo: true
 buildDrafts: false
 buildFuture: false
 buildExpired: false

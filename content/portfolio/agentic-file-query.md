@@ -7,7 +7,7 @@ tags: ["ai", "llm", "python", "gemini", "adk", "rag", "docling", "vector-search"
 categories: ["AI", "RAG Engineering", "LLM"]
 series: ["AI Engineering"]
 cover:
-    image: portfolio/adk-view.png
+    image: portfolio/adk-view.jpeg
     caption: "Agent Development Kit (ADK) view of the agent"
 showToc: true
 ---
@@ -20,7 +20,7 @@ I wanted something better. Something that behaves less like a search engine and 
 
 So I built **Agentic File Query**: an AI-powered document search system that replaces the fixed retrieve-and-generate pipeline with an autonomous agent that reasons about what to read and when.
 
-![Agentic File Query — FastAPI Web UI showing the agent scanning documents and calling tools in real time](/portfolio/fastapi-ui-view.png)
+![Agentic File Query — FastAPI Web UI showing the agent scanning documents and calling tools in real time](/portfolio/fastapi-ui-view.jpeg)
 
 ## Source Code
 
@@ -293,7 +293,7 @@ I needed something that could handle messy real-world documents — scanned PDFs
 
 The system offers multiple interfaces:
 
-![ADK Dev UI showing the agent's tool graph and a research query response](/portfolio/adk-view.png)
+![ADK Dev UI showing the agent's tool graph and a research query response](/portfolio/adk-view.jpeg)
 
 ```bash
 # CLI — Full agent search

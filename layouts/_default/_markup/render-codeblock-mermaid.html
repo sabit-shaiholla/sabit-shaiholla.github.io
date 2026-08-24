@@ -1,12 +1,24 @@
 {{- $id := printf "diagram-%02d" (add .Ordinal 1) -}}
-<figure class="diagram not-prose relative scroll-mt-8 rounded border pt-6" id="{{ $id }}">
-  <aside
-    class="absolute -top-[1px] right-0 z-50 hidden rounded-bl-sm rounded-tr-sm bg-gray-200 px-2 py-1 text-gray-500 transition-opacity md:inline-block"
-  >
-    
-  </aside>
-  <pre class="mermaid !bg-inherit">
+{{- /* Load the Mermaid runtime once per page (only when a mermaid block
+       renders). Store is page-scoped and content render is sequential. */ -}}
+{{- if not (.Page.Store.Get "mermaidLoaded") -}}
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  const themeOf = () => document.documentElement.dataset.theme === "dark" ? "dark" : "default";
+  mermaid.initialize({ startOnLoad: true, theme: themeOf() });
+  /* Re-render diagrams when the site theme is toggled */
+  new MutationObserver(() => {
+    mermaid.initialize({ startOnLoad: false, theme: themeOf() });
+    document.querySelectorAll("pre.mermaid").forEach((el) => {
+      el.removeAttribute("data-processed");
+      mermaid.run({ nodes: [el] });
+    });
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+</script>
+{{- .Page.Store.Set "mermaidLoaded" true -}}
+{{- end -}}
+<figure class="diagram" id="{{ $id }}">
+  <pre class="mermaid">
     {{- .Inner | safeHTML }}
   </pre>
 </figure>
-{{- .Page.Store.Set "hasMermaid" true -}}
