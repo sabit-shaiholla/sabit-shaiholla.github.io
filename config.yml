@@ -63,6 +63,7 @@ outputs:
     - HTML
     - RSS
     - JSON
+    - LLMS
   section:
     - HTML
     - JSON
@@ -75,12 +76,24 @@ outputFormats:
     isPlainText: true
     isHTML: false
     permalinkable: true
+  LLMS:
+    mediaType: "text/plain"
+    baseName: "llms"
+    isPlainText: true
+    notAlternative: true
 
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
   title: Sabit Shaikholla
-  description: "Personal website and blog"
+  description: "Personal website of Sabit Shaikholla — Solution Architect, Systems Engineer, and AI Engineer. Deep-dives on AI engineering, RAG, LLM agents, Java microservices, system design, and cloud architecture."
   author: Sabit Shaikholla
+  images:
+    - "/images/profile.jpg"
+  schema:
+    publisherType: Person
+    sameAs:
+      - "https://github.com/sabit-shaiholla"
+      - "https://www.linkedin.com/in/sabit-shaiholla"
   defaultTheme: dark
   disableThemeToggle: false
 
@@ -145,8 +158,8 @@ params:
       url: "https://linkedin.com/in/sabit-shaiholla"
 
   analytics:
-    google: 
-      SiteVerificationTag: "G-MD41PG75BY"
+    google:
+      SiteVerificationTag: "Ik8siRCaYxWs0Wtt_TnboD8NKXL-ybYOmtSuNSJt_7o"
   # fuseOpts:
   #   isCaseSensitive: false
   #   shouldSort: true

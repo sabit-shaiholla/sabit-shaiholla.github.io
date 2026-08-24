@@ -1,6 +1,6 @@
 ---
 title: "Welcome"
-description: "Personal website and blog of Sabit Shaikholla"
+description: "Personal website of Sabit Shaikholla — Solution Architect, Systems Engineer, and AI Engineer. Deep-dives on AI engineering, RAG, LLM agents, system architecture, system design, and cloud architecture."
 ---
 
 ## About Me
