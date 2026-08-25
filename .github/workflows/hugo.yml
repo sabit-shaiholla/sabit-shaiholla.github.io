@@ -40,6 +40,12 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Install Node.js dependencies
         run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
+      - name: Generate graph embeddings (Gemini)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        # Non-fatal: the committed static/graph/embeddings.json still ships,
+        # and the graph falls back to tag-based links if it is stale/missing.
+        run: python3 scripts/embed_graph.py || echo "::warning::Embedding generation failed (missing GEMINI_API_KEY or API error); deploying with committed embeddings.json"
       - name: Build with Hugo
         env:
           HUGO_CACHEDIR: ${{ runner.temp }}/hugo_cache

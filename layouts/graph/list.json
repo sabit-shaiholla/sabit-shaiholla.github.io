@@ -1,43 +1,71 @@
-{{- $pages := where site.RegularPages ".Section" "in" (slice "til" "portfolio" "random") -}}
-{{- $nodes := slice -}}
-{{- $links := slice -}}
+{{- /* Get all pages from specific sections */ -}}
+{{- $allPages := where .Site.RegularPages "Section" "in" (slice "til" "portfolio" "random") -}}
 
-{{- /* First, add all pages as nodes regardless of connections */ -}}
-{{- range $pages -}}
-  {{- $nodes = $nodes | append (dict 
+{{- /* Build post nodes with metadata for the details panel */ -}}
+{{- $nodes := slice -}}
+{{- range $allPages -}}
+  {{- $nodes = $nodes | append (dict
     "id" .RelPermalink
     "name" .Title
     "section" .Section
+    "summary" (.Summary | plainify | truncate 180)
+    "date" (.Date.Format "2006-01-02")
     "tags" (.Params.tags | default slice)
     "categories" (.Params.categories | default slice)
   ) -}}
 {{- end -}}
 
-{{- /* Then create links between nodes that share tags or categories */ -}}
-{{- range $page := $pages -}}
-  {{- range $otherPage := $pages -}}
-    {{- if ne $page.RelPermalink $otherPage.RelPermalink -}}
-      {{- $commonTags := 0 -}}
-      {{- range $tag := $page.Params.tags | default slice -}}
-        {{- if in ($otherPage.Params.tags | default slice) $tag -}}
-          {{- $commonTags = add $commonTags 1 -}}
-        {{- end -}}
-      {{- end -}}
+{{- /* Skill hub nodes from data/skills.json */ -}}
+{{- $skills := site.Data.skills.skills | default slice -}}
+{{- range $skills -}}
+  {{- $nodes = $nodes | append (dict
+    "id" (printf "skill:%s" .id)
+    "name" .name
+    "section" "skill"
+    "summary" .description
+    "color" .color
+    "tags" slice
+    "categories" slice
+  ) -}}
+{{- end -}}
 
-      {{- $commonCategories := 0 -}}
-      {{- range $category := $page.Params.categories | default slice -}}
-        {{- if in ($otherPage.Params.categories | default slice) $category -}}
-          {{- $commonCategories = add $commonCategories 1 -}}
-        {{- end -}}
-      {{- end -}}
-
-      {{- if or (gt $commonTags 0) (gt $commonCategories 0) -}}
-        {{- $links = $links | append (dict 
+{{- /* Post-to-post links (each unordered pair once, weight = shared tags+categories, case-insensitive) */ -}}
+{{- $links := slice -}}
+{{- range $i, $page := $allPages -}}
+  {{- $pageTags := apply ($page.Params.tags | default slice) "lower" "." -}}
+  {{- $pageCats := apply ($page.Params.categories | default slice) "lower" "." -}}
+  {{- range $j, $otherPage := $allPages -}}
+    {{- if lt $i $j -}}
+      {{- $otherTags := apply ($otherPage.Params.tags | default slice) "lower" "." -}}
+      {{- $otherCats := apply ($otherPage.Params.categories | default slice) "lower" "." -}}
+      {{- $weight := add (len (intersect $pageTags $otherTags)) (len (intersect $pageCats $otherCats)) -}}
+      {{- if gt $weight 0 -}}
+        {{- $links = $links | append (dict
           "source" $page.RelPermalink
           "target" $otherPage.RelPermalink
-          "value" (add $commonTags $commonCategories)
+          "value" $weight
         ) -}}
       {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Post-to-skill membership links (tag/category overlap + explicit posts list) */ -}}
+{{- range $page := $allPages -}}
+  {{- $pageTags := apply ($page.Params.tags | default slice) "lower" "." -}}
+  {{- $pageCats := apply ($page.Params.categories | default slice) "lower" "." -}}
+  {{- range $skill := $skills -}}
+    {{- $overlap := add (len (intersect $pageTags ($skill.tags | default slice))) (len (intersect $pageCats ($skill.categories | default slice))) -}}
+    {{- if in ($skill.posts | default slice) $page.RelPermalink -}}
+      {{- $overlap = add $overlap 2 -}}
+    {{- end -}}
+    {{- if gt $overlap 0 -}}
+      {{- $links = $links | append (dict
+        "source" (printf "skill:%s" $skill.id)
+        "target" $page.RelPermalink
+        "value" $overlap
+        "kind" "skill"
+      ) -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
@@ -45,4 +73,4 @@
 {
   "nodes": {{ $nodes | jsonify }},
   "links": {{ $links | jsonify }}
-} 
+}
