@@ -1,0 +1,16 @@
+{
+  "name": "sabit-shaiholla.github.io",
+  "private": true,
+  "type": "module",
+  "description": "Build tooling for the content atlas (chunk embedding + UMAP projection)",
+  "scripts": {
+    "build:atlas": "node scripts/build_atlas.mjs"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^3.8.1",
+    "umap-js": "^1.4.0"
+  },
+  "devDependencies": {
+    "d3": "^7.9.0"
+  }
+}

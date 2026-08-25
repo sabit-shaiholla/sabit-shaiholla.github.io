@@ -1,0 +1,71 @@
+{{ define "main" }}
+<article class="post-single">
+  <header class="post-header">
+    <h1 class="post-title">{{ .Title }}</h1>
+    <div class="post-meta">
+      <span>Every dot is a paragraph, positioned by semantic similarity and colored by skill area. Search embeds your query in your own browser &mdash; nothing is sent to a server.</span>
+    </div>
+  </header>
+
+  <div class="post-content">
+    {{ .Content }}
+    <div class="atlas-wrapper">
+      <!-- Search: in-browser neural search over chunk embeddings -->
+      <form id="atlas-search-form" class="atlas-search-form" role="search">
+        <input id="atlas-search" type="search" placeholder="Ask anything, e.g. &quot;how do agents decide which file to read?&quot;"
+               autocomplete="off" aria-label="Semantic search over all posts" />
+        <button type="submit" class="atlas-search-btn" aria-label="Search">Search</button>
+        <button type="button" id="atlas-search-clear" class="atlas-search-btn atlas-search-btn-ghost" aria-label="Clear search">Clear</button>
+      </form>
+      <div id="atlas-search-status" class="atlas-search-status" aria-live="polite"></div>
+      <div id="atlas-search-results" class="atlas-search-results"></div>
+
+      <!-- Stats line (populated by JS) -->
+      <div id="atlas-stats" class="atlas-stats"></div>
+
+      <div class="atlas-stage">
+        <div id="atlas-container" data-source='{{ "atlas/atlas.json" | relURL }}'></div>
+
+        <!-- Controls -->
+        <div class="atlas-controls">
+          <button id="atlas-zoom-in" class="atlas-btn" title="Zoom In" aria-label="Zoom in">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+          <button id="atlas-zoom-out" class="atlas-btn" title="Zoom Out" aria-label="Zoom out">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+          <button id="atlas-fit" class="atlas-btn" title="Reset View" aria-label="Reset view to fit all points">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Skill legend (populated by JS) -->
+        <div id="atlas-legend" class="atlas-legend"></div>
+
+        <!-- Paragraph detail panel (populated by JS) -->
+        <div id="atlas-panel" class="atlas-panel"></div>
+      </div>
+
+      <div class="atlas-footer">
+        Paragraphs are chunked at build time, embedded with a sentence-transformer, and projected to 2D with UMAP.
+        Search loads the same model into your browser via transformers.js and ranks chunks by cosine similarity &mdash; a fully client-side retrieval pipeline.
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- D3 (zoom, quadtree, density contours). transformers.js is lazy-loaded by atlas.js on first search. -->
+<script src="//unpkg.com/d3@7"></script>
+
+{{ $atlasJS := resources.Get "js/atlas.js" | resources.Minify | resources.Fingerprint }}
+<script src="{{ $atlasJS.RelPermalink }}"></script>
+
+{{ end }}

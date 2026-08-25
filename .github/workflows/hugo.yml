@@ -38,8 +38,8 @@ jobs:
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
-      - name: Install Node.js dependencies
-        run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
+      # NB: package.json only holds local atlas build tooling (scripts/build_atlas.mjs);
+      # its outputs are committed, so CI does not need to npm ci anything.
       - name: Generate graph embeddings (Gemini)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}

@@ -47,3 +47,23 @@ in the right semantic neighborhood.
 `embed_graph.py` also writes a 2D PCA projection of every node's embedding
 (`positions` in `embeddings.json`). The "semantic layout" toggle on the graph page
 pins nodes to these embedding-space coordinates instead of the force simulation.
+
+## Content Atlas (`/atlas/`)
+
+A chunk-level semantic map: every paragraph is embedded with
+`all-MiniLM-L6-v2` and projected to 2D with UMAP, colored by skill area.
+Search embeds the query **in the visitor's browser** (transformers.js loads the
+same model) and cosine-ranks against int8-quantized chunk vectors — a fully
+client-side retrieval pipeline, no backend.
+
+```bash
+npm install            # once: @huggingface/transformers + umap-js
+npm run build:atlas    # regenerates static/atlas/* after content changes
+```
+
+- First run downloads the ONNX model (~25 MB) to the local HF cache.
+- Chunk embeddings are cached in `scripts/atlas-cache.json` (committed) keyed by
+  text hash; the build is deterministic (seeded UMAP), so unchanged content
+  produces byte-identical output.
+- Outputs (`static/atlas/atlas.json` + `atlas-vectors.bin`) are committed;
+  CI never needs Node dependencies.

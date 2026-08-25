@@ -54,9 +54,9 @@ languages:
           name: Graph
           url: /graph/
           weight: 45
-        - identifier: wordcloud
-          name: Cloud
-          url: /wordcloud/
+        - identifier: atlas
+          name: Atlas
+          url: /atlas/
           weight: 48
 
 outputs:
