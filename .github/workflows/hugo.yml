@@ -31,20 +31,16 @@ jobs:
       - name: Install Dart Sass
         run: sudo snap install dart-sass
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: recursive
           fetch-depth: 0
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v5
-      # NB: package.json only holds local atlas build tooling (scripts/build_atlas.mjs);
-      # its outputs are committed, so CI does not need to npm ci anything.
+        uses: actions/configure-pages@v6
       - name: Generate graph embeddings (Gemini)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        # Non-fatal: the committed static/graph/embeddings.json still ships,
-        # and the graph falls back to tag-based links if it is stale/missing.
         run: python3 scripts/embed_graph.py || echo "::warning::Embedding generation failed (missing GEMINI_API_KEY or API error); deploying with committed embeddings.json"
       - name: Build with Hugo
         env:
@@ -57,7 +53,7 @@ jobs:
             --cleanDestinationDir \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: ./public
 
@@ -70,4 +66,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4 
+        uses: actions/deploy-pages@v5
