@@ -141,82 +141,113 @@ Example: type 'whois' and press ↵ to see profile.`,
 
         whois:
 `<b>Name</b>: Sabit Shaikholla
-<b>Profession</b>: Senior Systems Engineer
+<b>Profession</b>: AI/LLM Engineer, Forward Deployed Engineer
 <b>Current location</b>: Almaty, Kazakhstan
 <b>Homepage</b>: <a href="https://sabit-shaiholla.github.io/" target="_blank">sabit-shaiholla.github.io</a>
 
-Results-driven Senior Systems Engineer with 6 years of experience delivering measurable outcomes including $2M cost savings and 30% efficiency improvements through technical solutions.
-Seeking to leverage expertise in system architecture, process optimization, and cross-functional leadership to drive operational excellence.`,
+I build RAG and agent systems over internal company data, and deploy LLMs on-premise with SGLang and vLLM.
+Before that, backend and systems engineering across telecom BSS/OSS: Spring Boot microservices, event-driven
+integration, and a stint leading a team of 10 on apps with a few million monthly users.
+
+Type 'experience' for the details.`,
 
         skills:
 `Category                        | Items
 --------------------------------+------------------------------------
-Business & System Analysis      | Business Process Modeling
-                                | Requirements Gathering
-                                | Solution Design
-                                | Technical Discovery
-                                | End-to-End Testing
-                                | Agile Methodologies
-                                | Microservices Architecture
-                                | API Design & Integration
-                                | DevOps Practices
+Languages                       | Python
+                                | Java
+                                | Go
+                                | SQL
 --------------------------------+------------------------------------
-Data Analysis & Visualization   | SQL
-                                | Tableau
-                                | Power BI
+AI / LLM                        | Google ADK
+                                | LangChain
+                                | LangGraph
+                                | Pydantic-AI
+                                | PyTorch
+                                | Vertex AI
+                                | SageMaker
+                                | Gemini API
 --------------------------------+------------------------------------
-Programming                     | Java (Spring Boot)
-                                | Python
+Model serving                   | vLLM
+                                | SGLang
+                                | Self-hosted inference
+                                |  (embeddings up to 120B)
 --------------------------------+------------------------------------
-Database Systems                | Oracle PL/SQL
-                                | PostgreSQL
-                                | MySQL
-                                | MongoDB (NoSQL)
+LLM Ops & Evaluation            | RAGAS
+                                | OpenEvals
+                                | LangSmith
+                                | Langfuse
+                                | MLflow
+                                | Kubeflow
 --------------------------------+------------------------------------
-Cloud Platforms                 | AWS
-                                | Azure
-                                | Google Cloud Platform
-                                |  (BigQuery, Cloud Functions)
---------------------------------+------------------------------------
-Tools & Technologies            | Git
-                                | Docker
-                                | Kafka
-                                | Redis
-                                | Kubernetes
-                                | RabbitMQ
-                                | ELK stack
+Backend                         | Spring Boot
+                                | Quarkus
+                                | FastAPI
+                                | gRPC
+                                | GraphQL
                                 | REST APIs
-                                | GraphQL`,
+--------------------------------+------------------------------------
+Data & Messaging                | Kafka
+                                | RabbitMQ
+                                | Spark
+                                | PostgreSQL
+                                | pgvector
+                                | DuckDB
+                                | Elasticsearch
+                                | Oracle PL/SQL
+                                | MongoDB
+                                | Redis
+--------------------------------+------------------------------------
+Platform                        | Docker
+                                | Kubernetes
+                                | AWS
+                                | GCP
+                                | Azure
+                                | Oracle Cloud
+                                | GitHub Actions
+                                | Grafana
+                                | ELK stack
+--------------------------------+------------------------------------
+Systems & Delivery              | Solution design
+                                | API design & integration
+                                | Requirements & technical discovery
+                                | Microservices architecture
+                                | Event-driven architecture
+                                | End-to-end testing
+                                | DevOps practices`,
 
         experience:
 `<b>Position</b>: <em>Senior Systems Engineer</em>
-<b>Company</b>: <a href="https://www.kcell.kz/en/about" target="_blank">Kcell</a>
-<b>Location</b>: Almaty, Kazakhstan
-<b>Working Period</b>: September 2021 – July 2022
-- Led migration from monolithic billing system to microservices, cutting costs by $300K annually and improving response time by 65%.
-- Developed API gateway integrating 20+ services, reducing incidents by 40%.
-- Designed CI/CD pipeline for iOS/Android/Web SuperApp dev, reducing Time-to-Market from 3 months to 3 weeks with 99.9% crash-free rate.
-- Established DevOps practices across 6 teams, boosting deployment frequency from bi-weekly to daily and reducing MTTR by 60%.
-- Implemented automated testing via Postman across 100+ APIs, capturing 95% of bugs pre-deployment.
+<b>Company</b>: <a href="https://www.netcracker.com/" target="_blank">Netcracker Technology</a>
+<b>Location</b>: Waltham, MA, USA (Remote)
+<b>Working Period</b>: April 2023 - Present
+- Built enterprise RAG over internal knowledge: 100+ code repositories, 1000+ Confluence pages and 5000+ documents. Search relevance improved by 65%, adopted by 100+ team members.
+- Added an automated RAGAS evaluation loop to the pipeline, reaching 0.89 faithfulness and 0.92 answer relevance on a 15K-query benchmark.
+- Deployed LLMs on-premise: Kimi-K2.6 on SGLang (MoE, 100+ tokens/sec, 52% lower TTFT than baseline) and GPT-OSS 120B on vLLM.
+- Built a marketplace for AI agent skills on APM (Agent Package Manager): skills as installable packages with versions and dependency resolution, instead of being copied between projects by hand.
+- Designed an event-driven integration layer connecting BSS/OSS modules (Order Management, Provisioning, Billing, CRM) to the new self-service portal, accelerating order-to-activation by 70%.
+- Built an E2E testing framework across 30+ distributed microservices handling billing, ordering, and customer data, reducing production defects by 75% at 95% test automation coverage.
+- Designed a cloud-native feature-flag framework (Kafka core + Redis streams) for a 2M+ DAU web app, enabling rollout of 15+ concurrent features, cutting rollback incidents by 80% and release cycle time from 6 weeks to 4 days.
 
 <b>Position</b>: <em>Lead Systems Engineer</em>
 <b>Company</b>: <a href="https://www.kcell.kz/en/about" target="_blank">Kcell</a>
 <b>Location</b>: Almaty, Kazakhstan
-<b>Working Period</b>: July 2022 –April 2023
-- Increased team productivity by 15% by leading a team of 10 engineers in managing mobile and web app platforms - Activ & Kcell SuperApps
-- Spearheaded architectural redesign of SuperApp ecosystem serving 3M+ monthly active users, achieving 99.99% uptime and reducing latency by 60%.
-- Orchestrated system health monitoring solution for distributed application stack with 20+ components, enabling proactive issue detection and reducing system outages by 70%.
-- Decreased user complaints by 85% and increased NPS score from 2.5 to 4.1 (out of 5.0) within 3 months by implementing NLP and data analytics systems.
-- Streamlined system integration, coordinating design and development phases with infrastructure systems (BSS/ OSS,Enterprise Service Bus, asynchronous product ordering system, high-performance application server, CVM) to enhance interoperability.
+<b>Working Period</b>: July 2022 - April 2023
+- Led a team of 10 engineers running the Activ and Kcell SuperApp mobile and web platforms, increasing team productivity by 15%.
+- Redesigned the SuperApp architecture for 3M+ monthly active users, reaching 99.99% uptime and reducing latency by 60%.
+- Set up health monitoring across a 20+ component distributed stack, catching issues early and reducing outages by 70%.
+- Reduced user complaints by 85% and raised NPS from 2.5 to 4.1 (out of 5.0) in 3 months using NLP and data analytics on support data.
+- Coordinated integration with BSS/OSS infrastructure: Enterprise Service Bus, asynchronous product ordering, application server, and CVM.
 
 <b>Position</b>: <em>Senior Systems Engineer</em>
-<b>Company</b>: <a href="https://www.netcracker.com/" target="_blank">Netcracker Technology</a>
-<b>Location</b>: Waltham, MA, USA (Remote)
-<b>Working Period</b>: April 2023 – Present
-- Architected an event-driven integration layer connecting BSS/OSS modules (Order Management, Provisioning, Billing, CRM) to the new self-service portal, accelerating order-to-activation by 70%.
-- Improved internal knowledge search relevance by 65% by implementing a multimodal Retrieval-Augmented Generation (RAG) system over company documentation, resulting in adoption by 100+ team members for information search.
-- Implemented E2E testing framework across 30+ distributed microservices managing billing, ordering, and customer data, reducing production defects by 75% and achieving 95% test automation coverage.
-- Spearheaded design of a cloud-native feature-flag framework (Kafka core + Redis streams) enabling instant rollout of 15+ concurrent features for a 2M+ DAU web app—reducing rollback incidents by 80% and slashing release cycle time from 6 weeks to 4 days.`,
+<b>Company</b>: <a href="https://www.kcell.kz/en/about" target="_blank">Kcell</a>
+<b>Location</b>: Almaty, Kazakhstan
+<b>Working Period</b>: September 2021 - July 2022
+- Led migration from a monolithic billing system to microservices, cutting costs by $300K annually and improving response time by 65%.
+- Built an API gateway integrating 20+ services, reducing incidents by 40%.
+- Designed the CI/CD pipeline for iOS, Android and web SuperApp development, cutting time-to-market from 3 months to 3 weeks at a 99.9% crash-free rate.
+- Established DevOps practices across 6 teams, moving deployments from bi-weekly to daily and reducing MTTR by 60%.
+- Automated testing across 100+ APIs with Postman, catching 95% of bugs before deployment.`,
 
         education:
 `<b>Degree</b>: Bachelor of Electrical & Electronic Engineering
@@ -235,19 +266,31 @@ Tools & Technologies            | Git
 <b>Graduation Year</b>: 2021`,
 
         projects:
-`- <b>Football Oracle</b>: Football Oracle is a Spring Boot–based application for managing football data with secure JWT authentication, PostgreSQL storage, RESTful APIs, SonarQube quality checks, and Docker deployment. 
-Link: <a href="https://github.com/sabit-shaiholla/football-oracle" target="_blank">github.com/sabit-shaiholla/football-oracle</a>
+`- <b>Agentic File Query</b>: An agent that explores a document folder itself instead of trusting nearest-neighbour search over pre-embedded chunks. Runs a Scan, Deep Dive and Backtrack loop over nine filesystem and vector tools, so it can follow references and retry when retrieval misses. Google ADK, Gemini 3 Flash, Docling, pgvector/DuckDB, FastAPI.
+Link: <a href="https://github.com/sabit-shaiholla/agentic-file-query" target="_blank">github.com/sabit-shaiholla/agentic-file-query</a>
 
-- <b>E-commerce Microservices</b>: E-commerce Microservices is a Spring Boot–powered, microservices-based platform featuring dynamic service discovery and event-driven communication to build scalable online stores. 
-Link: <a href="https://github.com/sabit-shaiholla/ecommerce-microservices" target="_blank">github.com/sabit-shaiholla/ecommerce-microservices</a>
-
-- <b>AI & LLM Tutorials</b>: AI & LLM Tutorials provides hands-on, code-driven tutorials to teach developers how to build and fine-tune large language models and related AI mechanisms. 
-Link: <a href="https://github.com/sabit-shaiholla/ai-llm-tutorials" target="_blank">github.com/sabit-shaiholla/ai-llm-tutorials</a>
-
-- <b>Corrective RAG & OpenEvals</b>: Corrective RAG & OpenEvals implements a corrective retrieval-augmented-generation pipeline using OpenEvals on LangGraph to iteratively improve LLM outputs. 
+- <b>Corrective RAG & OpenEvals</b>: A RAG pipeline that grades every retrieved document for relevance before using it, routing the agent into Correct, Incorrect or Ambiguous branches and falling back to web search when nothing passes the threshold. LangGraph, Gemini 2.5 Flash, Ollama, OpenEvals, Tavily.
 Link: <a href="https://github.com/sabit-shaiholla/corrective-rag-openevals" target="_blank">github.com/sabit-shaiholla/corrective-rag-openevals</a>
 
-- <b>Kcell & Activ SuperApp</b>: It is an all-in-one mobile application that combines telecom services, rewards, a loyalty program, and an online shop into one platform for users in Kazakhstan. 
+- <b>Gemini File Search Tool</b>: Managed RAG end to end. Upload a PDF, get answers with grounding metadata pointing at the source chunks. Runs on an Oracle Cloud always-free instance behind Nginx and Let's Encrypt, with CI pushing releases.
+Link: <a href="https://github.com/sabit-shaiholla/gemini-api-file-search-tool" target="_blank">github.com/sabit-shaiholla/gemini-api-file-search-tool</a> <a href="https://filequerysystem.duckdns.org/" target="_blank">live demo</a>
+
+- <b>Premier League Match Prediction</b>: Selenium scraper that gets past FBREF's 403s, 584 engineered features across 17 statistical categories, six seasons of matches. Reaches 61.2% test accuracy on three-way Win/Draw/Loss against a 33.3% baseline. Python, scikit-learn, pandas.
+Link: <a href="https://github.com/sabit-shaiholla/pl-football" target="_blank">github.com/sabit-shaiholla/pl-football</a>
+
+- <b>IoT Edge Latency</b>: Measures latency and QoS trade-offs across Raspberry Pi, EC2, local VM and AWS Greengrass nodes, using Aruco-marker video as ground truth. Python, OpenCV, AWS Greengrass, MQTT.
+Link: <a href="https://github.com/sabit-shaiholla/iot-edge-latency" target="_blank">github.com/sabit-shaiholla/iot-edge-latency</a>
+
+- <b>AI & LLM Tutorials</b>: Hands-on notebooks working through LLM mechanics and RAG patterns.
+Link: <a href="https://github.com/sabit-shaiholla/ai-llm-tutorials" target="_blank">github.com/sabit-shaiholla/ai-llm-tutorials</a>
+
+- <b>E-commerce Microservices</b>: Event-driven e-commerce platform with service discovery, distributed tracing and Keycloak authentication. Spring Boot, Kafka, Eureka, Zipkin.
+Link: <a href="https://github.com/sabit-shaiholla/ecommerce-microservices" target="_blank">github.com/sabit-shaiholla/ecommerce-microservices</a>
+
+- <b>Football Oracle</b>: AI-driven player analytics with JWT auth, generated reports and SonarQube in CI. Spring Boot, React, PostgreSQL, Vertex AI.
+Link: <a href="https://github.com/sabit-shaiholla/football-oracle" target="_blank">github.com/sabit-shaiholla/football-oracle</a>
+
+- <b>Kcell & Activ SuperApp</b>: An all-in-one mobile application combining telecom services, rewards, a loyalty program and an online shop for users in Kazakhstan.
 Link: <a href="https://kcell.kz" target="_blank">kcell.kz</a> <a href="https://activ.kz" target="_blank">activ.kz</a>`,
 
         contact:

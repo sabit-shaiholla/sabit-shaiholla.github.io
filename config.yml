@@ -86,7 +86,7 @@ outputFormats:
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
   title: Sabit Shaikholla
-  description: "Personal website of Sabit Shaikholla — Solution Architect, Systems Engineer, and AI Engineer. Deep-dives on AI engineering, RAG, LLM agents, Java microservices, system design, and cloud architecture."
+  description: "Personal website of Sabit Shaikholla, AI/LLM Engineer and Forward Deployed Engineer. Notes on RAG, LLM agents, evaluation, model serving, and system architecture."
   author: Sabit Shaikholla
   images:
     - "/images/profile.jpg"
@@ -139,15 +139,20 @@ params:
     enabled: true
     title: Sabit Shaikholla
     subtitle: >
-      Welcome to my personal website!
+      **AI/LLM Engineer** | **Forward Deployed Engineer**
       <br><br>
-      **Solution Architect** | **Systems Engineer** | **AI Engineer**  
+      I build RAG and agent systems over internal company data, and deploy LLMs on our own hardware
+      with vLLM and SGLang. Most of the work now is getting retrieval and evaluation good enough
+      that people trust the answers.
       <br><br>
-      Solutions- and Data-driven Systems Engineer with 5+ years of experience architecting and implementing enterprise-scale applications. 
-      Demonstrated expertise in Full-Stack Development, Software Architecture, and Cloud Solutions. 
-      Proven track record of improving system performance, reducing operational costs, and driving digital transformation initiatives.
+      Before that, backend and systems engineering: Spring Boot microservices, event-driven BSS/OSS
+      integration, and a stint leading a team of 10 on apps with a few million monthly users.
+      Much of it customer facing, so I spend about as much time working out what someone needs as building it.
       <br><br>
-      I'm also a tech and football enthusiast.
+      I write up what I learn here. Also a football fan.
+      <br><br>
+      Open to AI/LLM and forward deployed engineering roles.
+      Email is fastest: saba.shaiholla@gmail.com
 
     imageUrl: "/images/profile.jpg"
     imageWidth: 120

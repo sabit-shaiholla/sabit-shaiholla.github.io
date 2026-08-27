@@ -1,20 +1,8 @@
 ---
 title: "Welcome"
-description: "Personal website of Sabit Shaikholla — Solution Architect, Systems Engineer, and AI Engineer. Deep-dives on AI engineering, RAG, LLM agents, system architecture, system design, and cloud architecture."
+description: "Personal website of Sabit Shaikholla, AI/LLM Engineer and Forward Deployed Engineer. Notes on RAG, LLM agents, evaluation, model serving, and system architecture."
 ---
 
-## About Me
+I build RAG and agent systems over internal company data, and deploy LLMs on our own hardware with vLLM and SGLang.
 
-I'm Sabit Shaikholla, a Solution Architect passionate about technology and innovation. I focus on creating efficient, scalable solutions and sharing knowledge through this blog.
-
-### What I Do
-
-- Solution Architecture & Design
-- AI & Machine Learning
-- Full-Stack Development
-- Cloud Solutions
-- Technical Leadership
-
-### Latest Posts
-
-Check out my latest posts in the [TIL](/til) section or explore my [Portfolio](/portfolio). 
+Longer notes live in [Portfolio](/portfolio), shorter ones in [TIL](/til).
