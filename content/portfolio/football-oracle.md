@@ -17,7 +17,7 @@ The analysis of football player performance has evolved significantly with the a
 ## Source Code
 
 The complete source code is available on GitHub:
-[Football Oracle](https://github.com/sabit-shaiholla/football-oracle)
+[Football Oracle](https://github.com/sabit-shaikholla/football-oracle)
 
 ## **2. System Architecture**
 

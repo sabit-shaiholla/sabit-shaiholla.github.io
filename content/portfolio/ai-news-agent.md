@@ -179,7 +179,7 @@ async def get_search(search_data: RunContext[SearchDataclass], query: str) -> di
 ## Source Code
 
 The complete source code is available on GitHub:
-[AI LLM Tutorials Repository](https://github.com/sabit-shaiholla/ai-llm-tutorials/tree/master)
+[AI LLM Tutorials Repository](https://github.com/sabit-shaikholla/ai-llm-tutorials/tree/master)
 
 ## Technical Stack
 

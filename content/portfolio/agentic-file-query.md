@@ -25,7 +25,7 @@ So I built **Agentic File Query**: an AI-powered document search system that rep
 ## Source Code
 
 The complete source code is available on GitHub:
-[Agentic File Query](https://github.com/sabit-shaiholla/agentic-file-query)
+[Agentic File Query](https://github.com/sabit-shaikholla/agentic-file-query)
 
 ## The Problem with Traditional RAG
 

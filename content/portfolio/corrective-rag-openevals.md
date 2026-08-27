@@ -67,7 +67,7 @@ In summary, OpenEvals allows the LLM agent to judge its own intermediate outputs
 
 ## Building the Agent: LangGraph, LLMs, and Tools
 
-### Source code can be found here: [Github - Corrective RAG OpenEvals](https://github.com/sabit-shaiholla/corrective-rag-openevals)
+### Source code can be found here: [Github - Corrective RAG OpenEvals](https://github.com/sabit-shaikholla/corrective-rag-openevals)
 
 Implementing a Corrective RAG agent with OpenEvals involved assembling a few moving pieces. At a high level, the agent is orchestrated as a graph of actions:
 * `LLM Backbone`: The core reasoning and answer generation is done by an LLM. For flexibility and cost-efficiency, I experimented with a smaller local model (Qwen-2.5, a 7B parameter model) running via the Ollama engine, as well as a larger cloud model (Google’s Gemini 2.5) for comparison. The agent code can work with any LLM that LangChain/LangGraph supports – you just plug in the model API or runtime of choice. The local Qwen model is fast for prototyping, while Gemini (a state-of-the-art model) offers higher quality outputs.

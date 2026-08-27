@@ -8,7 +8,7 @@ categories: ["DevOps", "Cloud", "Tutorial"]
 showToc: true
 ---
 
-In this post, I will share the detailed steps I took to set up the infrastructure for my [Gemini API File Search Tool](https://github.com/sabit-shaiholla/gemini-api-file-search-tool). I chose Oracle Cloud's Always Free Tier because it offers generous resources that are perfect for hosting small to medium-sized projects without incurring costs.
+In this post, I will share the detailed steps I took to set up the infrastructure for my [Gemini API File Search Tool](https://github.com/sabit-shaikholla/gemini-api-file-search-tool). I chose Oracle Cloud's Always Free Tier because it offers generous resources that are perfect for hosting small to medium-sized projects without incurring costs.
 
 For more details about Gemini File Search Tool, you can check my other blog post [Revolutionizing RAG: Why Gemini File Search Tool is the great RAG-as-a-Service](/portfolio/gemini-file-search-tool).
 
@@ -71,7 +71,7 @@ I cloned the project repository and set up a Python virtual environment to isola
 
 ```bash
 cd /home/ubuntu
-git clone https://github.com/sabit-shaiholla/gemini-api-file-search-tool.git
+git clone https://github.com/sabit-shaikholla/gemini-api-file-search-tool.git
 cd gemini-api-file-search-tool
 
 # Create and activate virtual environment
@@ -218,7 +218,7 @@ To streamline updates, I configured a GitHub Actions workflow. This workflow aut
 
 **Workflow File:** `.github/workflows/deploy.yml`
 
-You can check the whole file [here](https://github.com/sabit-shaiholla/gemini-api-file-search-tool/blob/master/.github/workflows/deploy.yml).
+You can check the whole file [here](https://github.com/sabit-shaikholla/gemini-api-file-search-tool/blob/master/.github/workflows/deploy.yml).
 
 ```yaml
 name: Deploy to Oracle Cloud

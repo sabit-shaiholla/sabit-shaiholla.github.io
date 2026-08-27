@@ -3,7 +3,7 @@
        Docs: https://giscus.app */ -}}
 {{- if and (or .Params.comments site.Params.comments) (ne .Params.comments false) site.Params.giscus.repoID }}
 <script src="https://giscus.app/client.js"
-        data-repo="{{ site.Params.giscus.repo | default "sabit-shaiholla/sabit-shaiholla.github.io" }}"
+        data-repo="{{ site.Params.giscus.repo | default "sabit-shaikholla/sabit-shaikholla.github.io" }}"
         data-repo-id="{{ site.Params.giscus.repoID }}"
         data-category="{{ site.Params.giscus.category | default "Announcements" }}"
         data-category-id="{{ site.Params.giscus.categoryID }}"

@@ -1,4 +1,4 @@
-# sabit-shaiholla.github.io
+# sabit-shaikholla.github.io
 
 Personal website built with Hugo (PaperMod), deployed to GitHub Pages via GitHub Actions.
 

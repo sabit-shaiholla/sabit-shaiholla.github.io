@@ -19,7 +19,7 @@ This project demonstrates my implementation of a scalable e-commerce platform us
 ## Source Code
 
 The complete source code is available on GitHub:
-[E-Commerce Microservices Repository](https://github.com/sabit-shaiholla/ecommerce-microservices)
+[E-Commerce Microservices Repository](https://github.com/sabit-shaikholla/ecommerce-microservices)
 
 ## Core Technologies
 

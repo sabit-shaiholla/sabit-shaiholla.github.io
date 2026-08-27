@@ -17,7 +17,7 @@ The Gemini API enables RAG through the File Search tool by automatically handlin
 ## **Source Code and Service in Action**
 
 The complete source code is available on GitHub:
-[Gemini API File Search Tool - RAG-as-a-Service](https://github.com/sabit-shaiholla/gemini-api-file-search-tool)
+[Gemini API File Search Tool - RAG-as-a-Service](https://github.com/sabit-shaikholla/gemini-api-file-search-tool)
 
 To experience the File Search Tool processing documents (like PDF files) and generating grounded answers directly, you can access the deployed service below:
 Deployed Service (on Oracle Cloud): [https://filequerysystem.duckdns.org/](https://filequerysystem.duckdns.org/)

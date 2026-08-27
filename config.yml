@@ -1,4 +1,4 @@
-baseURL: "https://sabit-shaiholla.github.io/"
+baseURL: "https://sabit-shaikholla.github.io/"
 title: "Sabit Shaikholla"
 pagination.pagerSize: 5
 theme: [PaperMod]
@@ -93,8 +93,8 @@ params:
   schema:
     publisherType: Person
     sameAs:
-      - "https://github.com/sabit-shaiholla"
-      - "https://www.linkedin.com/in/sabit-shaiholla"
+      - "https://github.com/sabit-shaikholla"
+      - "https://www.linkedin.com/in/sabit-shaikholla"
   defaultTheme: dark
   disableThemeToggle: false
 
@@ -117,7 +117,7 @@ params:
   # After enabling Discussions on the repo and installing https://github.com/apps/giscus,
   # fill in repoID and categoryID from https://giscus.app
   giscus:
-    repo: "sabit-shaiholla/sabit-shaiholla.github.io"
+    repo: "sabit-shaikholla/sabit-shaikholla.github.io"
     repoID: "R_kgDON5rJbA"
     category: "General"
     categoryID: "DIC_kwDON5rJbM4DEGkb"
@@ -170,9 +170,9 @@ params:
 
   socialIcons:
     - name: github
-      url: "https://github.com/sabit-shaiholla"
+      url: "https://github.com/sabit-shaikholla"
     - name: linkedin
-      url: "https://linkedin.com/in/sabit-shaiholla"
+      url: "https://linkedin.com/in/sabit-shaikholla"
 
   analytics:
     google:

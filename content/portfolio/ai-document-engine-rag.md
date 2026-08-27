@@ -24,7 +24,7 @@ My solution combines computer vision, natural language processing, and semantic 
 ## Source Code
 
 The complete source code is available on GitHub:
-[AI LLM Tutorials Repository](https://github.com/sabit-shaiholla/ai-llm-tutorials/tree/master)
+[AI LLM Tutorials Repository](https://github.com/sabit-shaikholla/ai-llm-tutorials/tree/master)
 
 ## System Architecture
 
